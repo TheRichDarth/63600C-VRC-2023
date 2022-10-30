@@ -3,7 +3,7 @@
 /*    Module:       main.cpp                                                  */
 /*    Author:       VEX                                                       */
 /*    Created:      Thu Sep 26 2019                                           */
-/*    Description:  Competition Template                                      */
+/*    Description:  Competition Template                                      */ 
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
@@ -46,11 +46,12 @@ competition Competition;
  * TODO: Add air-saving code to limit index pneumatic actuation to allow enough air for the endgame.
  * TODO: Possibly change indexTime throughout the match to account for having less air pressure at the end of the match. 
  * TODO: Add Partner Controller Support
- * TODO: Add auton select
+ * TODO: Test auton select
  * 
  * !test
  * ?test
  * 
+ * Example changes to a comment
  */
 
 

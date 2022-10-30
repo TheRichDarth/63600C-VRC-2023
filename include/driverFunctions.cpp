@@ -2,7 +2,7 @@
 #include "iostream"
 
 
-//Code to display images on the brain screen
+//Code to display images on the brain screen 
 
 int imgPos = 0; // The initial image to display
 void incrementImg(){
