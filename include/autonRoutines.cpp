@@ -24,6 +24,7 @@ void rollerSpinAuton(bool onRedSide){
 }
 void skillsAuton1(){
     rollerSpinAuton(true);
+    turnRight(2.2,rev,30,velocityUnits::pct);
     driveTimeout(10,sec);
     driveFwd(-0.5,rev,10,velocityUnits::pct, true);
     driveLeft(-0.8,rev,10,velocityUnits::pct);
