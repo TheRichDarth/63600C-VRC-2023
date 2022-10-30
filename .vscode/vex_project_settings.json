@@ -1,0 +1,18 @@
+{
+	"project": {
+		"name": "63600C-23",
+		"slot": 1,
+		"description": "63600C Competition Code for 2022-2023 Game",
+		"platform": "V5",
+		"creationDate": "Tue, 06 Sep 2022 20:10:48 GMT",
+		"language": "cpp",
+		"sdkVersion": "V5_20220726_10_00_00",
+		"cpp": {
+			"includePath": []
+		}
+	},
+	"extension": {
+		"version": "0.1.0",
+		"json": 1
+	}
+}
