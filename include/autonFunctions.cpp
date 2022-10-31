@@ -1,54 +1,142 @@
+
 #include "vex.h"
 
-void driveFwd(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion){
+
+
+const float defaultAutonDriveSpeed = 30;
+const float defaultAutonTurnSpeed = 15;
+vex::rotationUnits defaultRotationUnits = rotationUnits::rev;
+vex::distanceUnits defaultDistanceUnits = distanceUnits::in;
+
+const float drivetrainRatio = 1.414213;
+const float drivetrainGearRatio =1.2;
+const float wheelCircumference = 3.25*3.141592;
+
+//Drive factor is the total distance traveled for one revolution of the motor. This is used to calculate distances for distance-based auton driving
+const float driveFactor = wheelCircumference*drivetrainRatio*drivetrainGearRatio;
+
+void driveFwd(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
 }
-void driveFwd(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits){
-  driveFwd(distance,distanceUnits,velocity,velocityUnits,true);
+void driveFwd(float distance,rotationUnits distanceUnits){
+  driveFwd(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
 }
-void driveRev(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion){
+void driveFwd(float distance){
+  driveFwd(distance,defaultRotationUnits);
+}
+
+void driveRev(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
 }
-void driveRev(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits){
-  driveRev(distance,distanceUnits,velocity,velocityUnits,true);
+void driveRev(float distance,rotationUnits distanceUnits){
+  driveRev(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
 }
-void driveLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits){
+void driveRev(float distance){
+  driveRev(distance,defaultRotationUnits);
+}
+void driveLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits);
+  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
-void driveRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits){
+void driveLeft(float distance,rotationUnits distanceUnits){
+  driveLeft(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
+}
+void driveLeft(float distance){
+  driveLeft(distance,defaultRotationUnits);
+}
+void driveRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits);
+  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
-void turnRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits){
+void driveRight(float distance,rotationUnits distanceUnits){
+  driveRight(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
+}
+void driveRight(float distance){
+  driveRight(distance,defaultRotationUnits);
+}
+void turnRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits);
+  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
-void turnLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits){
+void turnRight(float distance,rotationUnits distanceUnits){
+  turnRight(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
+}
+void turnRight(float distance){
+  turnRight(distance,defaultRotationUnits);
+}
+void turnLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits);
+  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
+}
+void turnLeft(float distance,rotationUnits distanceUnits){
+  turnLeft(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
+}
+void turnLeft(float distance){
+  turnLeft(distance,defaultRotationUnits);
 }
 void driveTimeout(int time, timeUnits units){
   frontLeftMotor.setTimeout(time,units);
   frontRightMotor.setTimeout(time,units);
   backLeftMotor.setTimeout(time,units);
   backRightMotor.setTimeout(time,units);
+}
+void driveTimeout(int time){
+  driveTimeout(time,seconds);
+}
+
+
+
+//Distance-based auton functions:
+//Distance driven = revolutions*circumference*sqrt(2)*gearRatio
+//revolutions = distance/(circumference*sqrt(2)*gearRatio)
+
+
+float convertToInch(float input, distanceUnits distUnits){
+  // if(distUnits == inches || distUnits == distanceUnits::in){
+  //   return input;
+  // }else 
+  if(distUnits==distanceUnits::mm) return 25.4*input;
+  if(distUnits==distanceUnits::cm) return 2.54*input;
+  return input;
   
 }
+
+void driveFwd(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveFwd(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+}
+void driveFwd(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
+  driveFwd(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
+}
+void driveFwd(float distance, distanceUnits distUnits, bool waitForCompletion = true){
+  driveFwd(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
+}
+void driveFwd(float distance, bool waitForCompletion = true){
+  driveFwd(distance, defaultDistanceUnits, waitForCompletion);
+}
+void driveFwd(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveFwd(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
+}
+void driveFwd(float distance, float velocity, bool waitForCompletion = true){
+  driveFwd(distance, velocity, velocityUnits::pct, waitForCompletion);
+}
+//Need to add these functions for each drive command
+
+
+
 
 void rollerSpin(bool onRedSide, int rollerVelocity){
     

@@ -27,7 +27,6 @@ int readyPressDelay = 10;
 int indexTime = 10;
 
 
-
 /* Game Auton Routines
  * 0: Do Nothing
  * 1: Push preloads into low goal

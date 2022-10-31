@@ -14,7 +14,7 @@ void rollerSpinAuton(bool onRedSide){
   
 
   driveTimeout(3,sec);
-  driveRev(-1,rev,30,velocityUnits::pct, false);
+  driveFwd(0.5,rev,30,velocityUnits::pct, false);
   for(int i = 0; i<15*1000/20;i++){
     if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
       rollerSpin(onRedSide);
@@ -24,6 +24,7 @@ void rollerSpinAuton(bool onRedSide){
 }
 void skillsAuton1(){
     rollerSpinAuton(true);
+    turnRight(2.2,rev,30,velocityUnits::pct);
     driveTimeout(10,sec);
     driveFwd(-0.5,rev,10,velocityUnits::pct, true);
     driveLeft(-0.8,rev,10,velocityUnits::pct);
