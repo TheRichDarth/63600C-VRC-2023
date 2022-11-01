@@ -199,7 +199,7 @@ void turnLeft(float angle,float velocity, velocityUnits velUnits){
 void turnLeft(float angle, float velocity){
   turnLeft(angle, velocity, vex::velocityUnits::pct);
 }
-void turnLeft(angle){
+void turnLeft(float angle){
   turnLeft(angle,defaultAutonTurnSpeed);
 }
 void turnRight(float angle,float velocity, velocityUnits velUnits){
@@ -209,7 +209,7 @@ void turnRight(float angle,float velocity, velocityUnits velUnits){
 void turnRight(float angle, float velocity){
   turnRight(angle, velocity, vex::velocityUnits::pct);
 }
-void turnRight(angle){
+void turnRight(float angle){
   turnRight(angle,defaultAutonTurnSpeed);
 }
 
