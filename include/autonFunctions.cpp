@@ -133,7 +133,65 @@ void driveFwd(float distance, float velocity, velocityUnits velUnits, bool waitF
 void driveFwd(float distance, float velocity, bool waitForCompletion = true){
   driveFwd(distance, velocity, velocityUnits::pct, waitForCompletion);
 }
-//Need to add these functions for each drive command
+
+void driveRev(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+}
+void driveRev(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
+  driveRev(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
+}
+void driveRev(float distance, distanceUnits distUnits, bool waitForCompletion = true){
+  driveRev(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
+}
+void driveRev(float distance, bool waitForCompletion = true){
+  driveRev(distance, defaultDistanceUnits, waitForCompletion);
+}
+void driveRev(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveRev(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
+}
+void driveFRev(float distance, float velocity, bool waitForCompletion = true){
+  driveRev(distance, velocity, velocityUnits::pct, waitForCompletion);
+}
+
+void driveLeft(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveLeft(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+}
+void driveLeft(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
+  driveLeft(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
+}
+void driveleft(float distance, distanceUnits distUnits, bool waitForCompletion = true){
+  driveLeft(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
+}
+void driveLeft(float distance, bool waitForCompletion = true){
+  driveLeft(distance, defaultDistanceUnits, waitForCompletion);
+}
+void driveLeft(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveLeft(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
+}
+void driveLeft(float distance, float velocity, bool waitForCompletion = true){
+  driveLeft(distance, velocity, velocityUnits::pct, waitForCompletion);
+}
+
+void driveRight(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveFwd(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+}
+void driveRight(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
+  driveFwd(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
+}
+void driveRight(float distance, distanceUnits distUnits, bool waitForCompletion = true){
+  driveRight(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
+}
+void driveRight(float distance, bool waitForCompletion = true){
+  driveRight(distance, defaultDistanceUnits, waitForCompletion);
+}
+void driveRight(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
+  driveRight(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
+}
+void driveRight(float distance, float velocity, bool waitForCompletion = true){
+  driveRight(distance, velocity, velocityUnits::pct, waitForCompletion);
+}
+
+
 
 
 
