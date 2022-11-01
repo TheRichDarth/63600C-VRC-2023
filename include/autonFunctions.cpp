@@ -11,6 +11,7 @@ vex::distanceUnits defaultDistanceUnits = distanceUnits::in;
 const float drivetrainRatio = 1.414213;
 const float drivetrainGearRatio =1.2;
 const float wheelCircumference = 3.25*3.141592;
+const float wheelDistance = 7.5; // Distance between centers of each wheel and the center of the robot on each axis. (See Notebook)
 
 //Drive factor is the total distance traveled for one revolution of the motor. This is used to calculate distances for distance-based auton driving
 const float driveFactor = wheelCircumference*drivetrainRatio*drivetrainGearRatio;
@@ -189,6 +190,27 @@ void driveRight(float distance, float velocity, velocityUnits velUnits, bool wai
 }
 void driveRight(float distance, float velocity, bool waitForCompletion = true){
   driveRight(distance, velocity, velocityUnits::pct, waitForCompletion);
+}
+//Takes Degrees
+void turnLeft(float angle,float velocity, velocityUnits velUnits){
+  float distance = angle/(6.28318530717958*wheelDistance*1.414213*wheelCircumference*drivetrainRatio*drivetrainGearRatio);
+  turnLeft(distance, rotationUnits::rev, velocity, velUnits);
+}
+void turnLeft(float angle, float velocity){
+  turnLeft(angle, velocity, vex::velocityUnits::pct);
+}
+void turnLeft(angle){
+  turnLeft(angle,defaultAutonTurnSpeed);
+}
+void turnRight(float angle,float velocity, velocityUnits velUnits){
+  float distance = angle/(6.28318530717958*wheelDistance*1.414213*wheelCircumference*drivetrainRatio*drivetrainGearRatio);
+  turnRight(distance, rotationUnits::rev, velocity, velUnits);
+}
+void turnRight(float angle, float velocity){
+  turnRight(angle, velocity, vex::velocityUnits::pct);
+}
+void turnRight(angle){
+  turnRight(angle,defaultAutonTurnSpeed);
 }
 
 
