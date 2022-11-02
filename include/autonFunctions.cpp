@@ -1,7 +1,21 @@
 
 #include "vex.h"
 
-
+/* Configuration Variables for autonomous funtions:
+ *
+ * defaultAutonDriveSpeed: default speed for driving in auton if no speed is specified. (See overloaded functions below.)
+ * defaultAutonTurnSpeed: default speed for turning in auton if no speed is specified. (See overloaded functions below.)
+ * defaultRotationUnits: default units for rotation if none are specified. (See overloaded functions below.)
+ * defaultDistanceUnits: default units for dsitance if none are specified. (See overloaded functions below.)
+ *
+ * drivetrainRatio: the equivalent gear ratio in the drivetrain. For us, this is sqrt(2) because of X-drive
+ * drivetrainGearRatio: the gear ratio on each wheel of the drivetrain. For us this is a 5:4 ratio meaning a factor of 5/4 or 1.25
+ * 
+ * wheelCircumference: circumference of each wheel (inches)
+ * wheelDistance: distance from center of the robot to the center of each wheel. Assumes drivetrain is square, not rectangular.
+ * 
+ * driveFactor: distance travelled for one revolution of the wheel. Used in distance based driving.
+ */
 
 const float defaultAutonDriveSpeed = 30;
 const float defaultAutonTurnSpeed = 15;
@@ -9,7 +23,7 @@ vex::rotationUnits defaultRotationUnits = rotationUnits::rev;
 vex::distanceUnits defaultDistanceUnits = distanceUnits::in;
 
 const float drivetrainRatio = 1.414213;
-const float drivetrainGearRatio =1.2;
+const float drivetrainGearRatio =1.25;
 const float wheelCircumference = 3.25*3.141592;
 const float wheelDistance = 7.5; // Distance between centers of each wheel and the center of the robot on each axis. (See Notebook)
 
