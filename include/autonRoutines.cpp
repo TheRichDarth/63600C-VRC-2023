@@ -1,12 +1,21 @@
 #include "vex.h"
 #include "autonFunctions.cpp"
 
-
-
+/* Push Preloads:
+ * Drives forward and backward to push preload discs into the low goal.
+ * Scores two points
+ * 100% success rate
+ */
 void pushPreloads(){
     driveFwd(2,rotationUnits::rev,30,velocityUnits::pct);
     driveRev(2,rotationUnits::rev,30,velocityUnits::pct);
 }
+/* rollerSpinAuton:
+ * Drives forward slightly into the roller on the left side and runs automatic roller spinning for the duration of the period
+ * Scores ten points
+ * 90% success rate
+ * Parameters: bool onRedSide: which side the roller is scored for
+ */
 void rollerSpinAuton(bool onRedSide){
     
   topOptical.setLightPower(90,pct);
@@ -23,6 +32,9 @@ void rollerSpinAuton(bool onRedSide){
     wait(20,msec);
   }
 }
+/* DEPRECATED: DO NOT USE
+ * Old skills auton from before we moved the roller. This will not work. 
+ */
 void skillsAuton1(){
     rollerSpinAuton(true);
     turnRight(2.2,rev,30,velocityUnits::pct);
