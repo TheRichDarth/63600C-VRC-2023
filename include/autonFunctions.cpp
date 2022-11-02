@@ -74,9 +74,9 @@ void turnRight(float distance, rotationUnits distanceUnits, float velocity, velo
 void turnRight(float distance,rotationUnits distanceUnits){
   turnRight(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
 }
-void turnRight(float distance){
-  turnRight(distance,defaultRotationUnits);
-}
+// void turnRight(float distance){
+//   turnRight(distance,defaultRotationUnits);
+// }
 void turnLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
@@ -86,9 +86,9 @@ void turnLeft(float distance, rotationUnits distanceUnits, float velocity, veloc
 void turnLeft(float distance,rotationUnits distanceUnits){
   turnLeft(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
 }
-void turnLeft(float distance){
-  turnLeft(distance,defaultRotationUnits);
-}
+// void turnLeft(float distance){
+//   turnLeft(distance,defaultRotationUnits);
+// }
 void driveTimeout(int time, timeUnits units){
   frontLeftMotor.setTimeout(time,units);
   frontRightMotor.setTimeout(time,units);
@@ -199,7 +199,7 @@ void turnLeft(float angle,float velocity, velocityUnits velUnits){
 void turnLeft(float angle, float velocity){
   turnLeft(angle, velocity, vex::velocityUnits::pct);
 }
-void turnLeft(angle){
+void turnLeft(float angle){
   turnLeft(angle,defaultAutonTurnSpeed);
 }
 void turnRight(float angle,float velocity, velocityUnits velUnits){
@@ -209,7 +209,7 @@ void turnRight(float angle,float velocity, velocityUnits velUnits){
 void turnRight(float angle, float velocity){
   turnRight(angle, velocity, vex::velocityUnits::pct);
 }
-void turnRight(angle){
+void turnRight(float angle){
   turnRight(angle,defaultAutonTurnSpeed);
 }
 
@@ -315,127 +315,197 @@ void rollerSpin(bool onRedSide){
  *  Has an infinite loop that will run until either auton starts or the loop is broken by 
  *  a final selection or preAuton ending.
  * 
-//  */
-// void brainAutonSelect(){ // Run in pre auton 
-//     //Brain Screen is 480x272 pixels 
+ */
 
-//     const int buttonMargin = 7;
-//     const int bankButtonWidth = 130;
-//     const int bankButtonHeight = 90;
-//     const int routinesOnEachScreen = 4;
+int autonSelectScreen = 0;
+int autonSelectBank = 0;
+int maxAutonBank = 3;
+bool finalAutonSelection = false;
 
-//     const int arrowSize = 30;
+/* Game Auton Routines
+ * 0: Do Nothing
+ * 1: Push preloads into low goal
+ * 2: Spin Roller to RED (Can be used in Skills)
+ *      -Starts on Left Side
+ * 3: Spin Roller to BLUE
+ *      -Starts on Right Side
+ * 
+ * Skills Routines:
+ * 4: Spin Roller, Shoot preloads into low goal and spins another roller (To RED for Skills)
+ * 
+ */
+
+int autonSelect = 1;
+const int numAutonRoutines = 12;
+const std::string autonRoutineNames[numAutonRoutines] = {
+    "0. Do Nothing",
+    "1. PushPreload",
+    "2. RED-Spin Roller",
+    "3. BLUE-Spin Roller",
+
+    "4. Skills-33",
+    "5. Xyz",
+    "6. Xyz",
+    "7. Xyz",
+
+    "8. Xyz",
+    "9. Xyz",
+    "10. Xyz",
+    "11. Xyz"
+};
+const std::string autonRoutineDescriptions[numAutonRoutines] = {
+    "0 points. Does nothing. Still nothing. Doesn't move; doesn't score. Just sits there. You can do better than this. Make a better choice.",
+    "2 points. Pushes preloads into the low goal. Drives forward and then backward about 2 feet.",
+    "10 points. Drives backward slightly and automatically spins roller for RED for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
+    "10 points. Drives backward slightly and automatically spins roller for BLUE for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
     
-//     const fontType routineNameFont = vex::fontType::mono12;
-//     const fontType routineDescriptionFont = vex::fontType::mono15;
-//     const fontType routineConfirmNameFont = vex::fontType::mono40;
-//     const fontType finalizeFont = vex::fontType::mono60;
-//     const int routineNumberOffset = 3;
+    "33 points. (Sometimes) Scores the first roller, shoots preloads into the opposite side's high goal and then spins another roller. Has only scored 23 points in a competition.",
+    "n points",
+    "n points",
+    "n points",
     
-//     const int autonButtonWidth = (480-((1+routinesOnEachScreen)*buttonMargin))/routinesOnEachScreen;
+    "n points",
+    "n points",
+    "n points",
+    "n points"
+};
+const color routineColors[numAutonRoutines] = {
+    color(230),
+    color(69,232,80),
+    color(232,80,69),
+    color(80, 69, 232),
 
-//     //Colors: https://www.color-hex.com/color-palette/1019156
-//     color backgroundColor = color(30);
-//     color bankBackgroundColor = color(230);
-//     //color autonButtonBackgroundColor = color(230);
-//     color bankArrowColor = color(16,14,17);
-//     color autonTextColor = color(16,14,17);
-//     color backButtonColor = color(204,12,12);
-//     color finalizeButtonColor = color(78,202,22);
-//     color finalizeTextColor = color(16,14,17);
+    color(161,69,232),
+    color(232,69,221),
+    color(232,69,140),
+    color(80,69,232),
+
+    color(252,244,52),
+    color(255,255,255),
+    color(156,89,209),
+    color(44,44,44) 
+};
+
+void brainAutonSelect(){ // Run in pre auton 
+    //Brain Screen is 480x272 pixels 
+
+    const int buttonMargin = 7;
+    const int bankButtonWidth = 130;
+    const int bankButtonHeight = 90;
+    const int routinesOnEachScreen = 4;
+
+    const int arrowSize = 30;
+    
+    const fontType routineNameFont = vex::fontType::mono12;
+    const fontType routineDescriptionFont = vex::fontType::mono15;
+    const fontType routineConfirmNameFont = vex::fontType::mono40;
+    const fontType finalizeFont = vex::fontType::mono60;
+    const int routineNumberOffset = 3;
+    
+    const int autonButtonWidth = (480-((1+routinesOnEachScreen)*buttonMargin))/routinesOnEachScreen;
+
+    //Colors: https://www.color-hex.com/color-palette/1019156
+    color backgroundColor = color(30);
+    color bankBackgroundColor = color(230);
+    //color autonButtonBackgroundColor = color(230);
+    color bankArrowColor = color(16,14,17);
+    color autonTextColor = color(16,14,17);
+    color backButtonColor = color(204,12,12);
+    color finalizeButtonColor = color(78,202,22);
+    color finalizeTextColor = color(16,14,17);
 
 
-//     while(!finalAutonSelection){
-//         Brain.Screen.setFillColor(backgroundColor);
-//         Brain.Screen.drawRectangle(0,0,480,272);
-//         switch (autonSelectScreen)
-//         {
-//         case 0: // Selection Screen (See page 1.111 in the Notebook)
-//             //Bank 0 is auton select 0-3
+    while(!finalAutonSelection){
+        Brain.Screen.setFillColor(backgroundColor);
+        Brain.Screen.drawRectangle(0,0,480,272);
+        switch (autonSelectScreen)
+        {
+        case 0: // Selection Screen (See page 1.111 in the Notebook)
+            //Bank 0 is auton select 0-3
             
-//             //Drawing:
-//             //Bank Buttons
-//             Brain.Screen.setFillColor(bankBackgroundColor);
-//             Brain.Screen.drawRectangle(buttonMargin,272-buttonMargin-bankButtonHeight,bankButtonWidth,bankButtonHeight);
-//             Brain.Screen.drawRectangle(480-buttonMargin-bankButtonWidth,272-buttonMargin-bankButtonHeight,bankButtonWidth,bankButtonHeight);
-//             //Bank Arrows
-//             Brain.Screen.setFillColor(bankArrowColor);
-//             Brain.Screen.drawRectangle(buttonMargin+bankButtonWidth/2-arrowSize,272-bankButtonHeight/2-arrowSize/2,arrowSize*3,arrowSize);
-//             //Auton Buttons
-//             for(int i = 0; i<routinesOnEachScreen; i++){
-//                 //Draws the rectangle for each selection button
-//                 Brain.Screen.setFillColor(routineColors[i+routinesOnEachScreen*autonSelectBank]);
-//                 Brain.Screen.drawRectangle(buttonMargin+(buttonMargin+autonButtonWidth)*i,buttonMargin,autonButtonWidth,272-buttonMargin*3-bankButtonHeight);
+            //Drawing:
+            //Bank Buttons
+            Brain.Screen.setFillColor(bankBackgroundColor);
+            Brain.Screen.drawRectangle(buttonMargin,272-buttonMargin-bankButtonHeight,bankButtonWidth,bankButtonHeight);
+            Brain.Screen.drawRectangle(480-buttonMargin-bankButtonWidth,272-buttonMargin-bankButtonHeight,bankButtonWidth,bankButtonHeight);
+            //Bank Arrows
+            Brain.Screen.setFillColor(bankArrowColor);
+            Brain.Screen.drawRectangle(buttonMargin+bankButtonWidth/2-arrowSize,272-bankButtonHeight/2-arrowSize/2,arrowSize*3,arrowSize);
+            //Auton Buttons
+            for(int i = 0; i<routinesOnEachScreen; i++){
+                //Draws the rectangle for each selection button
+                Brain.Screen.setFillColor(routineColors[i+routinesOnEachScreen*autonSelectBank]);
+                Brain.Screen.drawRectangle(buttonMargin+(buttonMargin+autonButtonWidth)*i,buttonMargin,autonButtonWidth,272-buttonMargin*3-bankButtonHeight);
                 
-//                 Brain.Screen.setFillColor(autonTextColor);
-//                 Brain.Screen.setFont(routineNameFont);
-//                 const char * name = autonRoutineNames[i+routinesOnEachScreen*autonSelectBank].c_str();
-//                 Brain.Screen.printAt(buttonMargin+(buttonMargin+autonButtonWidth)*i+routineNumberOffset,buttonMargin+routineNumberOffset,name);
+                Brain.Screen.setFillColor(autonTextColor);
+                Brain.Screen.setFont(routineNameFont);
+                const char * name = autonRoutineNames[i+routinesOnEachScreen*autonSelectBank].c_str();
+                Brain.Screen.printAt(buttonMargin+(buttonMargin+autonButtonWidth)*i+routineNumberOffset,buttonMargin+routineNumberOffset,name);
                 
-//             }
-//             //Checking:
-//             if(Brain.Screen.pressing()){
-//                 if(Brain.Screen.xPosition()<=buttonMargin+bankButtonWidth && Brain.Screen.yPosition()>=272-bankButtonHeight-buttonMargin){
-//                     autonSelectBank--;
-//                     if(autonSelectBank<0)autonSelectBank = maxAutonBank;
-//                 }else if(Brain.Screen.xPosition()>=(480-buttonMargin-bankButtonWidth) && Brain.Screen.yPosition()>=272-bankButtonHeight-buttonMargin){
-//                     autonSelectBank++;
-//                     if(autonSelectBank>maxAutonBank)autonSelectBank = 0;
-//                 }else{
-//                     for(int i = 0; i<routinesOnEachScreen; i++){
-//                         if(Brain.Screen.yPosition()<=(480-bankButtonHeight-2*buttonMargin) && Brain.Screen.xPosition()>=i*(480/routinesOnEachScreen) && Brain.Screen.xPosition()<=(i+1)*(480/routinesOnEachScreen)){
+            }
+            //Checking:
+            if(Brain.Screen.pressing()){
+                if(Brain.Screen.xPosition()<=buttonMargin+bankButtonWidth && Brain.Screen.yPosition()>=272-bankButtonHeight-buttonMargin){
+                    autonSelectBank--;
+                    if(autonSelectBank<0)autonSelectBank = maxAutonBank;
+                }else if(Brain.Screen.xPosition()>=(480-buttonMargin-bankButtonWidth) && Brain.Screen.yPosition()>=272-bankButtonHeight-buttonMargin){
+                    autonSelectBank++;
+                    if(autonSelectBank>maxAutonBank)autonSelectBank = 0;
+                }else{
+                    for(int i = 0; i<routinesOnEachScreen; i++){
+                        if(Brain.Screen.yPosition()<=(480-bankButtonHeight-2*buttonMargin) && Brain.Screen.xPosition()>=i*(480/routinesOnEachScreen) && Brain.Screen.xPosition()<=(i+1)*(480/routinesOnEachScreen)){
                             
-//                             autonSelect = i+autonSelectBank*routinesOnEachScreen;
-//                             autonSelectScreen = 1;
-//                         }                        
-//                     }
-//                 }
-//             }
+                            autonSelect = i+autonSelectBank*routinesOnEachScreen;
+                            autonSelectScreen = 1;
+                        }                        
+                    }
+                }
+            }
 
 
-//             break;
-//         case 1: // Final Confirmation (See page 1.111 in the Notebook)
+            break;
+        case 1: // Final Confirmation (See page 1.111 in the Notebook)
 
-//           //Drawing
-//           //Back Button
-//           Brain.Screen.setFillColor(backButtonColor);
-//           Brain.Screen.drawRectangle(buttonMargin,buttonMargin,120-buttonMargin,100);
-//           Brain.Screen.setFillColor(finalizeTextColor);
-//           Brain.Screen.setFont(mono30);
-//           Brain.Screen.printAt(buttonMargin+routineNumberOffset,buttonMargin+routineNumberOffset,"Back");
-//           //Title
-//           Brain.Screen.setFont(routineConfirmNameFont);
-//           const char * name = autonRoutineNames[autonSelect].c_str();
-//           Brain.Screen.printAt(120+buttonMargin*2,buttonMargin,name);
+          //Drawing
+          //Back Button
+          Brain.Screen.setFillColor(backButtonColor);
+          Brain.Screen.drawRectangle(buttonMargin,buttonMargin,120-buttonMargin,100);
+          Brain.Screen.setFillColor(finalizeTextColor);
+          Brain.Screen.setFont(mono30);
+          Brain.Screen.printAt(buttonMargin+routineNumberOffset,buttonMargin+routineNumberOffset,"Back");
+          //Title
+          Brain.Screen.setFont(routineConfirmNameFont);
+          //const char * nameTest = autonRoutineNames[autonSelect].c_str();
+          Brain.Screen.printAt(120+buttonMargin*2,buttonMargin,"Name");
 
-//           //Finalize Button
-//           Brain.Screen.setFillColor(finalizeButtonColor);
-//           Brain.Screen.drawRectangle(120,100+buttonMargin*2,240,150);
-//           Brain.Screen.setFont(finalizeFont);
-//           Brain.Screen.printAt(120+buttonMargin,100+3*buttonMargin,"Finalize");
-//           //Checking
-//           if(Brain.Screen.pressing()){
-//             if(Brain.Screen.xPosition()<=120+buttonMargin && Brain.Screen.yPosition() <=100+buttonMargin){
-//               //Back button Pressed
-//               autonSelectScreen = 0;
-//             }else if(Brain.Screen.xPosition()>=120 && Brain.Screen.xPosition()<=360){
-//               //Finalize Button Pressed
-//               finalAutonSelection = true;
-//               autonSelectScreen = 2;
-//               Controller1.rumble("- - -");
-//             }
-//           }
-//           break;
-//         case 2: // Locked on one routine. (See page 1.111 in the Notebook)
-//           Brain.Screen.setFont(routineConfirmNameFont);
-//           const char * name = autonRoutineNames[autonSelect].c_str();
-//           Brain.Screen.printAt(120+buttonMargin*2,buttonMargin,name);
-//           Brain.Screen.printAt(120+buttonMargin,100+3*buttonMargin,"Auton Finalized");
-//           break;
-//         default:
-//         Brain.Screen.printAt(30,30,"Error: Bad value for autonSelectScreen");
-//             break;
-//         }
-//         wait(20,msec);
-//     }
-// }
+          //Finalize Button
+          Brain.Screen.setFillColor(finalizeButtonColor);
+          Brain.Screen.drawRectangle(120,100+buttonMargin*2,240,150);
+          Brain.Screen.setFont(finalizeFont);
+          Brain.Screen.printAt(120+buttonMargin,100+3*buttonMargin,"Finalize");
+          //Checking
+          if(Brain.Screen.pressing()){
+            if(Brain.Screen.xPosition()<=120+buttonMargin && Brain.Screen.yPosition() <=100+buttonMargin){
+              //Back button Pressed
+              autonSelectScreen = 0;
+            }else if(Brain.Screen.xPosition()>=120 && Brain.Screen.xPosition()<=360){
+              //Finalize Button Pressed
+              finalAutonSelection = true;
+              autonSelectScreen = 2;
+              Controller1.rumble("- - -");
+            }
+          }
+          break;
+        case 2: // Locked on one routine. (See page 1.111 in the Notebook)
+          Brain.Screen.setFont(routineConfirmNameFont);
+          //const char * name = autonRoutineNames[autonSelect].c_str();
+          Brain.Screen.printAt(120+buttonMargin*2,buttonMargin,"null");
+          Brain.Screen.printAt(120+buttonMargin,100+3*buttonMargin,"Auton Finalized");
+          break;
+        default:
+        Brain.Screen.printAt(30,30,"Error: Bad value for autonSelectScreen");
+            break;
+        }
+        wait(20,msec);
+    }
+}
