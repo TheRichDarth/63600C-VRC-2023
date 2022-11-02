@@ -77,7 +77,7 @@ void pre_auton(void) {
   
   
   //brainAutonSelect();
-  
+  //rollerSpin(true);
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
@@ -94,7 +94,8 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  runAuton(autonSelect); // References "autonRoutines.cpp"
+  //runAuton(autonSelect); // References "autonRoutines.cpp"
+  rollerSpinAuton(true);
 }
 
 /*---------------------------------------------------------------------------*/
