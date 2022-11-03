@@ -68,29 +68,36 @@ void skillsAuton1(){
 }
 /*
  * Roller, roller, shoot preloads, pick up 3, shoot 3, pick up 2, roller, pick up 1, roller, shoot 3, pick up 2, shoot
- *
+ * See 11/12 entry in notebook
  *
  */
 void skillsAuton2(){
     //Step 0.1: Drive into the roller
+    driveTimeout(3,sec);
     driveRight(6,inches);
     driveFwd(2,inches);
     //Step 0.2: Spin roller
-    timer rollerSpinTimer;
-    rollerSpinTimer.clear();
-    float rollerSpinTime = 2.5; //Units: seconds
-    while(rollerSpinTimer<rollerSpinTime*1000){
-        if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
-            rollerSpin(true);
-        }else{
-            Controller1.rumble("-----");
-        }
-    }
-
+    autonRollerSpinning(true,2.5*1000);
     //Step 1.1: Drive to next roller
     driveRev(2.5*12,inches);
     turnRight(90);
-    
+    driveFwd(2.25*12,inches);
+    //Step 1.2: Spin second roller
+    autonRollerSpinning(true,2.5*1000);
+    //Step 2.1 Spin up flywheel (haha pun)
+    flywheelMotors.spin(fwd,100,velocityUnits::pct);
+    //Step 2.2 Drive to launch position
+    driveRev(24,inches);
+    turnRight(90);
+    //Step 3 launch Discs
+    for(int i = 0; i<3; i++){
+        indexPneumatic.set(true);
+        wait(60,msec);
+        indexPneumatic.set(false);
+        wait(60,msec);
+    }
+    //Step 4
+
 }
 
 
