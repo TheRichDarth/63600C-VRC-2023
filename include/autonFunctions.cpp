@@ -164,7 +164,7 @@ void driveRev(float distance, bool waitForCompletion = true){
 void driveRev(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
   driveRev(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
 }
-void driveFRev(float distance, float velocity, bool waitForCompletion = true){
+void driveRev(float distance, float velocity, bool waitForCompletion = true){
   driveRev(distance, velocity, velocityUnits::pct, waitForCompletion);
 }
 
@@ -174,7 +174,7 @@ void driveLeft(float distance, distanceUnits distUnits, float velocity, velocity
 void driveLeft(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
   driveLeft(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
 }
-void driveleft(float distance, distanceUnits distUnits, bool waitForCompletion = true){
+void driveLeft(float distance, distanceUnits distUnits, bool waitForCompletion = true){
   driveLeft(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
 }
 void driveLeft(float distance, bool waitForCompletion = true){

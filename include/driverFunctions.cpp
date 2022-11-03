@@ -50,7 +50,7 @@ int power, strafe, turn;
 int lfPower, lbPower, rfPower, rbPower;
 float scaler = 1;
 
-int s = 30; // slow drive speed (percent)
+int s = 10; // slow drive speed (percent)
 
 int deadZone(int min, int value){
     if(abs(value) > min){
@@ -73,9 +73,9 @@ int deadZone(int min, int value){
  */
 void xDrive(){
 
-    power = deadZone(5,Controller1.Axis3.value());
-    turn = -deadZone(5,Controller1.Axis1.value());
-    strafe = deadZone(5,Controller1.Axis4.value());
+    power = deadZone(0,Controller1.Axis3.value());
+    turn = -deadZone(0,Controller1.Axis1.value());
+    strafe = deadZone(0,Controller1.Axis4.value());
 
 
     if(enableSlowDrive){

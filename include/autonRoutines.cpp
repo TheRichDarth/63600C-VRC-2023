@@ -66,6 +66,36 @@ void skillsAuton1(){
     }
 
 }
+/*
+ * Roller, roller, shoot preloads, pick up 3, shoot 3, pick up 2, roller, pick up 1, roller, shoot 3, pick up 2, shoot
+ *
+ *
+ */
+void skillsAuton2(){
+    //Step 0.1: Drive into the roller
+    driveRight(6,inches);
+    driveFwd(2,inches);
+    //Step 0.2: Spin roller
+    timer rollerSpinTimer;
+    rollerSpinTimer.clear();
+    float rollerSpinTime = 2.5; //Units: seconds
+    while(rollerSpinTimer<rollerSpinTime*1000){
+        if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
+            rollerSpin(true);
+        }else{
+            Controller1.rumble("-----");
+        }
+    }
+
+    //Step 1.1: Drive to next roller
+    driveRev(2.5*12,inches);
+    turnRight(90);
+    
+}
+
+
+
+
 /* Game Auton Routines
  * 0: Do Nothing
  * 1: Push preloads into low goal
