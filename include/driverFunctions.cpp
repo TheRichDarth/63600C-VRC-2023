@@ -23,7 +23,13 @@ void flywheelSpeedControl(){
       Controller1.Screen.print(flywheelSpeed);
     }
 }
-
+/* runDriverRollerSpinning:
+ * Called in drive while loop
+ * Runs automatic roller spinning while driving.
+ * Will start moving the roller motor if both sensors see either red or blue
+ * Paraeter:
+ * onRedSide: controls which side the code will score the roller for
+ */
 void runDriverRollerSpinning(bool onRedSide){
     if(Controller1.ButtonX.pressing())autoRollerSpinning = false;
     // Roller Spinning (Nested Ifs galore)
@@ -44,7 +50,7 @@ int power, strafe, turn;
 int lfPower, lbPower, rfPower, rbPower;
 float scaler = 1;
 
-int s = 30; // slow drive speed (percent)
+int s = 10; // slow drive speed (percent)
 
 int deadZone(int min, int value){
     if(abs(value) > min){
@@ -52,11 +58,24 @@ int deadZone(int min, int value){
     }else return 0;
 }
 
+/* xDrive
+ * runs x drive based on slow drive buttons and analog sticks
+ * Function should be called in the drive while loop
+ * Note the configuration variables in config.cpp:
+ *
+ * bool enableSlowDrive = true;
+ * bool enableFwdRevSlowDrive = false;
+ * bool enableLeftRightSlowDrive = true;
+ * bool enableTurnSlowDrive = true;
+ * bool enableXDriveBrainPrinting = true;
+ * 
+ * Also note the variables above and the deadZone function
+ */
 void xDrive(){
 
-    power = deadZone(5,Controller1.Axis3.value());
-    turn = -deadZone(30,Controller1.Axis1.value());
-    strafe = deadZone(5,Controller1.Axis4.value());
+    power = deadZone(0,Controller1.Axis3.value());
+    turn = -deadZone(0,Controller1.Axis1.value());
+    strafe = deadZone(0,Controller1.Axis4.value());
 
 
     if(enableSlowDrive){

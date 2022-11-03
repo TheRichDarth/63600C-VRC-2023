@@ -95,7 +95,8 @@ void pre_auton(void) {
 
 void autonomous(void) {
   //runAuton(autonSelect); // References "autonRoutines.cpp"
-  rollerSpinAuton(true);
+  //rollerSpinAuton(true);
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -150,12 +151,12 @@ void usercontrol(void) {
     }
     if(Controller1.ButtonL1.pressing() && readyPress<=0){
       enableFlywheel = !enableFlywheel;
-      readyPress = 10;
+      readyPress = readyPressDelay;
     }
     if(Controller1.ButtonB.pressing() && readyPress<=0){
       indexPneumatic.set(true);
-      flywheelDelay = 10;
-      readyPress = 10;
+      flywheelDelay = indexTime;
+      readyPress = readyPressDelay;
     }
     
   
@@ -173,12 +174,14 @@ void usercontrol(void) {
     if(!displayImages){
       Brain.Screen.newLine();
       Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
+      Brain.Screen.newLine();
+      Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
     }
     if(Controller1.ButtonR1.pressing()){
-      intakeMotors.spin(forward,80,pct);
+      intakeMotors.spin(forward,100,pct);
       rollerMotor.spin(reverse);
     }else if(Controller1.ButtonR2.pressing()){
-      intakeMotors.spin(reverse,80,pct);
+      intakeMotors.spin(reverse,60,pct);
       rollerMotor.spin(forward);
     }else{
       intakeMotors.stop(coast);

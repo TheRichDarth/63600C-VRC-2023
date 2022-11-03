@@ -22,9 +22,9 @@ int flywheelSpeed = 99;
 int flywheelSpeedStep = 5;
 
 //readyPressDelay is the number of drive while() cycles between accepting single-press actions like launching a disc or pressing the brain screen.
-int readyPressDelay = 10;
+int readyPressDelay = 2;
 //indexTime is the number of drive while() cycles between contracting and extending the index pneumatic
-int indexTime = 10;
+int indexTime = 7;
 
 
 

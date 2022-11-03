@@ -1,12 +1,21 @@
 #include "vex.h"
 #include "autonFunctions.cpp"
 
-
-
+/* Push Preloads:
+ * Drives forward and backward to push preload discs into the low goal.
+ * Scores two points
+ * 100% success rate
+ */
 void pushPreloads(){
     driveFwd(2,rotationUnits::rev,30,velocityUnits::pct);
     driveRev(2,rotationUnits::rev,30,velocityUnits::pct);
 }
+/* rollerSpinAuton:
+ * Drives forward slightly into the roller on the left side and runs automatic roller spinning for the duration of the period
+ * Scores ten points
+ * 90% success rate
+ * Parameters: bool onRedSide: which side the roller is scored for
+ */
 void rollerSpinAuton(bool onRedSide){
     
   topOptical.setLightPower(90,pct);
@@ -23,6 +32,9 @@ void rollerSpinAuton(bool onRedSide){
     wait(20,msec);
   }
 }
+/* DEPRECATED: DO NOT USE
+ * Old skills auton from before we moved the roller. This will not work. 
+ */
 void skillsAuton1(){
     rollerSpinAuton(true);
     turnRight(2.2,rev,30,velocityUnits::pct);
@@ -54,6 +66,43 @@ void skillsAuton1(){
     }
 
 }
+/*
+ * Roller, roller, shoot preloads, pick up 3, shoot 3, pick up 2, roller, pick up 1, roller, shoot 3, pick up 2, shoot
+ * See 11/12 entry in notebook
+ *
+ */
+void skillsAuton2(){
+    //Step 0.1: Drive into the roller
+    driveTimeout(3,sec);
+    driveRight(6,inches);
+    driveFwd(2,inches);
+    //Step 0.2: Spin roller
+    autonRollerSpinning(true,2.5*1000);
+    //Step 1.1: Drive to next roller
+    driveRev(2.5*12,inches);
+    turnRight(90);
+    driveFwd(2.25*12,inches);
+    //Step 1.2: Spin second roller
+    autonRollerSpinning(true,2.5*1000);
+    //Step 2.1 Spin up flywheel (haha pun)
+    flywheelMotors.spin(fwd,100,velocityUnits::pct);
+    //Step 2.2 Drive to launch position
+    driveRev(24,inches);
+    turnRight(90);
+    //Step 3 launch Discs
+    for(int i = 0; i<3; i++){
+        indexPneumatic.set(true);
+        wait(60,msec);
+        indexPneumatic.set(false);
+        wait(60,msec);
+    }
+    //Step 4
+
+}
+
+
+
+
 /* Game Auton Routines
  * 0: Do Nothing
  * 1: Push preloads into low goal
