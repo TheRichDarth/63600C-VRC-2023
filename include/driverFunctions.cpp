@@ -27,7 +27,7 @@ void flywheelSpeedControl(){
  * Called in drive while loop
  * Runs automatic roller spinning while driving.
  * Will start moving the roller motor if both sensors see either red or blue
- * Paraeter:
+ * Parameter:
  * onRedSide: controls which side the code will score the roller for
  */
 void runDriverRollerSpinning(bool onRedSide){

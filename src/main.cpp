@@ -76,7 +76,7 @@ void pre_auton(void) {
   vexcodeInit();
   
   
-  //brainAutonSelect();
+  brainAutonSelect();
   //rollerSpin(true);
 
   // All activities that occur before the competition starts
