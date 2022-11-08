@@ -169,11 +169,17 @@ void usercontrol(void) {
 
     if(flywheelDelay<=0) indexPneumatic.set(false); 
 
+    // if(enableFlywheel) {
+    //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
+    // } else{
+    //   flywheelMotors.stop(coast);
+    // }
     if(enableFlywheel) {
-      flywheelMotors.spin(fwd,flywheelSpeed,pct);
+      flywheelMotors.spin(fwd,flywheelSpeed,volt);
     } else{
       flywheelMotors.stop(coast);
     }
+    
     if(!displayImages){
       Brain.Screen.newLine();
       Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));

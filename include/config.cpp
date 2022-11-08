@@ -17,9 +17,9 @@ bool enableXDriveBrainPrinting = true;
 //Cannot be enabled alongside enableFwdRevSlowDrive
 bool enableFlywheelSpeedControl = true; 
 // flywheelSpeed is the initial speed of the flywheel
-int flywheelSpeed = 99;
+int flywheelSpeed = 12;
 // flywheelSpeedStep is the number of steps the flywheelSpeed is adjusted by each time the button is pressed
-int flywheelSpeedStep = 5;
+int flywheelSpeedStep = 1;
 
 //readyPressDelay is the number of drive while() cycles between accepting single-press actions like launching a disc or pressing the brain screen.
 int readyPressDelay = 2;
