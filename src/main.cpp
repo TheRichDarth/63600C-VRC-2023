@@ -32,6 +32,8 @@
 #include "autonRoutines.cpp"
 #include "driverFunctions.cpp"
 
+#include "sylib/sylib.hpp"
+
 using namespace vex;
 
 // A global instance of competition
@@ -74,6 +76,7 @@ competition Competition;
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  sylib::initialize();
   
   
   brainAutonSelect();
