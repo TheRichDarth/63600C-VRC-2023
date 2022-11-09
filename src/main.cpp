@@ -127,7 +127,10 @@ void usercontrol(void) {
   endgameTimer.clear();
 
   while (1) {
-    
+    Controller2.Screen.clearScreen();
+    if(!Controller2.ButtonA.pressing() && !Controller2.ButtonB.pressing() && !Controller2.ButtonX.pressing() && !Controller2.ButtonY.pressing() && !Controller2.ButtonUp.pressing() && Controller2.ButtonDown.pressing() && !Controller2.ButtonLeft.pressing() && !Controller2.ButtonRight.pressing() && !Controller2.ButtonL1.pressing() && Controller2.ButtonL2.pressing()){
+      Controller2PressedLast = false;
+    }
     if(displayImages){
       //const char * img = names[imgPos].c_str();
       

@@ -32,3 +32,5 @@ int indexTime = 7;
 bool enableFlywheel = false;
 int readyPress = 0;
 int flywheelDelay = 0;
+bool Controller2PressedLast = false;
+bool Controller1PressedLast = false;
