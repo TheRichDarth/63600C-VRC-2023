@@ -23,6 +23,7 @@ motor rollerMotor = motor(PORT12, ratio36_1, true);
 motor intakeMotorsMotorA = motor(PORT10, ratio6_1, true);
 motor intakeMotorsMotorB = motor(PORT13, ratio6_1, false);
 motor_group intakeMotors = motor_group(intakeMotorsMotorA, intakeMotorsMotorB);
+controller Controller2 = controller(controllerType::partner);
 
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
 digital_out endgame = digital_out(Brain.ThreeWirePort.B);

@@ -97,9 +97,9 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  //runAuton(autonSelect); // References "autonRoutines.cpp"
+  runAuton(autonSelect); // References "autonRoutines.cpp"
   //rollerSpinAuton(true);
-
+  //Test123456
 }
 
 /*---------------------------------------------------------------------------*/
