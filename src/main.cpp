@@ -32,6 +32,8 @@
 #include "autonRoutines.cpp"
 #include "driverFunctions.cpp"
 
+#include "sylib/sylib.hpp"
+
 using namespace vex;
 
 // A global instance of competition
@@ -74,10 +76,13 @@ competition Competition;
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  sylib::initialize();
+  endgame.set(false);
   
   
   brainAutonSelect();
   //rollerSpin(true);
+
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
@@ -94,9 +99,9 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  //runAuton(autonSelect); // References "autonRoutines.cpp"
+  runAuton(autonSelect); // References "autonRoutines.cpp"
   //rollerSpinAuton(true);
-
+  //Test123456
 }
 
 /*---------------------------------------------------------------------------*/
@@ -111,7 +116,8 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
-
+  driverStarted = true;
+  endgame.set(false);
   
   const char * img = names[imgPos].c_str();    
   if(displayImages) Brain.Screen.drawImageFromFile(img, 0, 0);
@@ -124,7 +130,12 @@ void usercontrol(void) {
   endgameTimer.clear();
 
   while (1) {
-    
+    Controller2.Screen.clearScreen();
+    if(!Controller2.ButtonA.pressing() && !Controller2.ButtonB.pressing() && !Controller2.ButtonX.pressing() && !Controller2.ButtonY.pressing() && !Controller2.ButtonUp.pressing() && !Controller2.ButtonDown.pressing() && !Controller2.ButtonLeft.pressing() && !Controller2.ButtonRight.pressing() && !Controller2.ButtonL1.pressing() && !Controller2.ButtonL2.pressing()){
+      Controller2PressedLast = false;
+    }
+    Controller1.Screen.setCursor(4,1);
+    Controller1.Screen.print("C2: %d", Controller2PressedLast);
     if(displayImages){
       //const char * img = names[imgPos].c_str();
       
@@ -149,11 +160,11 @@ void usercontrol(void) {
       Brain.Screen.newLine();
       Brain.Screen.print("Ready Press = %d",readyPress);
     }
-    if(Controller1.ButtonL1.pressing() && readyPress<=0){
+    if((Controller1.ButtonX.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
       enableFlywheel = !enableFlywheel;
       readyPress = readyPressDelay;
     }
-    if(Controller1.ButtonB.pressing() && readyPress<=0){
+    if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing())&& readyPress<=0){
       indexPneumatic.set(true);
       flywheelDelay = indexTime;
       readyPress = readyPressDelay;
@@ -166,11 +177,17 @@ void usercontrol(void) {
 
     if(flywheelDelay<=0) indexPneumatic.set(false); 
 
+    // if(enableFlywheel) {
+    //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
+    // } else{
+    //   flywheelMotors.stop(coast);
+    // }
     if(enableFlywheel) {
-      flywheelMotors.spin(fwd,flywheelSpeed,pct);
+      flywheelMotors.spin(fwd,flywheelSpeed,volt);
     } else{
       flywheelMotors.stop(coast);
     }
+    
     if(!displayImages){
       Brain.Screen.newLine();
       Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
@@ -192,7 +209,7 @@ void usercontrol(void) {
 
 
     //Actuates the cylinder controlling the endgame release
-    if(Controller1.ButtonL2.pressing() && !Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing() && Controller1.ButtonX.pressing()){
+    if(Controller1.ButtonL2.pressing() && !Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing() && Controller1.ButtonB.pressing()){
       endgame.set(true);
     }else{
       endgame.set(false);
