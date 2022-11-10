@@ -248,7 +248,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     //int rollerVelocity = 90;
     vex::directionType preferredDirection = forward;
     const char * rumblePattern = ".";
-
+    rollerMotor.setStopping(brake);
     if(topOptical.color()==red){ //Red
       if(bottomOptical.color()==red){
         //R/R
@@ -370,7 +370,7 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "2.RED-Spin Roller",
     "3.BLUE-Spin Roller",
 
-    "4.Skills-33",
+    "4.Skills-2",
     "5.Xyz",
     "6.Xyz",
     "7.Xyz",
@@ -383,10 +383,10 @@ const std::string autonRoutineNames[numAutonRoutines] = {
 const std::string autonRoutineDescriptions[numAutonRoutines] = {
     "0 points. Does nothing. Still nothing. Doesn't move; doesn't score. Just sits there. You can do better than this. Make a better choice.",
     "2 points. Pushes preloads into the low goal. Drives forward and then backward about 2 feet.",
-    "10 points. Drives backward slightly and automatically spins roller for RED for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
-    "10 points. Drives backward slightly and automatically spins roller for BLUE for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
+    "10 points. Drives forward slightly and automatically spins roller for RED for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
+    "10 points. Drives forward slightly and automatically spins roller for BLUE for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
     
-    "33 points. (Sometimes) Scores the first roller, shoots preloads into the opposite side's high goal and then spins another roller. Has only scored 23 points in a competition.",
+    "?? points. New untested",
     "n points",
     "n points",
     "n points",
@@ -442,7 +442,7 @@ void brainAutonSelect(){ // Run in pre auton
     color finalizeTextColor = color(16,14,17);
 
 
-    while(!finalAutonSelection){
+    while(!finalAutonSelection && !driverStarted){
         Brain.Screen.setFillColor(backgroundColor);
         Brain.Screen.drawRectangle(0,0,480,272);
         Brain.Screen.setPenWidth(0);

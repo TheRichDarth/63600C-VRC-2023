@@ -96,10 +96,36 @@ void skillsAuton2(){
         indexPneumatic.set(false);
         wait(60,msec);
     }
-    //Step 4
+    //flywheelMotors.stop(coast);
+    //Step 4: Intake 3 and position to fire.
+    driveFwd(24,inches);
+    turnRight(45);
+    driveFwd(6*12,inches);
+    turnLeft(90);
+    //Step 5: fire 3 discs
+    for(int i = 0; i<3; i++){
+        indexPneumatic.set(true);
+        wait(60,msec);
+        indexPneumatic.set(false);
+        wait(60,msec);
+    }
+    flywheelMotors.stop(coast);
+    turnRight(75);
+    //Step 6: go to roller
+    driveFwd(27,inches);
+    turnRight(30);
+    driveFwd(27,inches);
+    //Step 7: Roller
+    turnLeft(75);
+    driveFwd(4,inches);
+    autonRollerSpinning(true,2.5*1000);
+    
+}
+void gameAutonLeft(){
+    driveLeft(6,inches);
+
 
 }
-
 
 
 
@@ -129,7 +155,10 @@ void runAuton(int autonSelect){
         rollerSpin(false);
         break;
     case 4:
-        skillsAuton1();
+        skillsAuton2();
+        break;
+    case 5:
+        gameAutonLeft();
         break;
 
 
