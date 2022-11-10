@@ -59,7 +59,7 @@ competition Competition;
  * Example changes to a comment
  */
 
-/* Pre auton runs when the code is paused by the field controller. 
+/* Pre auton runs when the code is paused by the field controller. xyz xyz
  * This is where we run the brain screen auton selection.
  * The brain screen auton selector sets the variable 'autonSelect', declared and defined to a default value in "config.cpp" 
  */
@@ -78,15 +78,20 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
-/* the autonomous function runs at the begining of our autonomous period. 
+/* the autonomous function runs at the begining of our autonomous period. jjjjj
  * we call our own function here, 'runAuton' which references the variable from the brain screen auton selector to decide which auton routine to run
  *
  */
 void autonomous(void) {
-  runAuton(autonSelect); // References "autonRoutines.cpp"
+  runAuton(5); // References "autonRoutines.cpp"
   //rollerSpinAuton(true);
   //Test123456
 }
+void doNothing(){
+}
+// void alsoNothing(){
+
+// }
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
@@ -115,7 +120,7 @@ void usercontrol(void) {
     Controller1.Screen.setCursor(4,1);
     Controller1.Screen.print("C2: %d", Controller2PressedLast);
     if(displayImages){
-      //const char * img = names[imgPos].c_str();
+      //const char * img = names[imgPos].c_str();;
       
       //Brain.Screen.drawImageFromFile(img, 0, 0);
 
@@ -128,7 +133,7 @@ void usercontrol(void) {
 
     }else{
     //Put Brain screen print code here to monitor values, etc.
-    //Brain.Screen.printAt(20,20,"test1");
+    //Brain.Screen.printAt(20,20,"test1");;
     }
 
     flywheelSpeedControl();  
@@ -150,8 +155,8 @@ void usercontrol(void) {
     }
     
 
-    // if(flywheelDelay<=0){
-    //    indexPneumatic.set(false);
+    // if(flywheelDelay<=0){m  mmmmdmcm
+    //    indexPneumatic.set(false);  
     // }
 
     //When flywheelDelay>0 cylinder is extended
@@ -174,7 +179,7 @@ void usercontrol(void) {
     // if(enableFlywheel) {
     //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
     // } else{
-    //   flywheelMotors.stop(coast);
+    //   flywheelMotors.stop(coast); wwhhxyzhxyjj
     // }
     if(enableFlywheel) {
       flywheelMotors.spin(fwd,flywheelSpeed,volt);
@@ -187,6 +192,12 @@ void usercontrol(void) {
       Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
       Brain.Screen.newLine();
       Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
+      Brain.Screen.newLine();
+      Brain.Screen.print("Top:%d",topOptical.hue());
+      Brain.Screen.newLine();
+      Brain.Screen.print("Bottom: %d",bottomOptical.hue());
+      std::cout << topOptical.hue();
+      std::cout << "\n";
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
@@ -216,6 +227,10 @@ void usercontrol(void) {
       Controller1.Screen.setCursor(4,10);
       Controller1.Screen.print("Endgame");
     } 
+    Controller2.Screen.setCursor(1,1);
+    Controller2.Screen.print("Top:%d",topOptical.hue());
+    Controller2.Screen.newLine();
+    Controller2.Screen.print("Bottom: %d",bottomOptical.hue());
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
