@@ -34,11 +34,11 @@ void flywheelSpeedControl(){
  * Parameter:
  * onRedSide: controls which side the code will score the roller for
  */
-void runDriverRollerSpinning(bool onRedSide){
+void runDriverRollerSpinning(bool onRedSide, bool acceptGreenForBlue = true){
     if(Controller1.ButtonX.pressing())autoRollerSpinning = false;
     // Roller Spinning (Nested Ifs galore)
     if(/*Controller1.ButtonX.pressing() &&*/ autoRollerSpinning){ //If roller button is being pressed
-      if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
+      if((topOptical.color()==red || topOptical.color()==blue || (topOptical.color()==green && acceptGreenForBlue)) && (bottomOptical.color()==red || bottomOptical.color()==blue && (bottomOptical.color()==green && acceptGreenForBlue))){ //Automatic Roller Spinning Only works if both sensors have a color
         rollerSpin(onRedSide, 30);
       }else{//Driver is trying to spin a roller but the sensors don't both have a reading
         //Controller1.rumble("-");

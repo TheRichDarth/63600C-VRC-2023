@@ -25,6 +25,7 @@ int flywheelSpeedStep = 1;
 int readyPressDelay = 2;
 //indexTime is the number of drive while() cycles between contracting and extending the index pneumatic
 int indexTime = 3;
+int indexTimeBetweenDiscs = 5;
 
 
 

@@ -297,12 +297,12 @@ void rollerSpin(bool onRedSide){
   rollerSpin(onRedSide,90);
 }
 
-void autonRollerSpinning(bool onRedSide, int timeDelay){
+void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue = true){
   timer rollerSpinTimer;
     rollerSpinTimer.clear();
     float rollerSpinTime = 2.5; //Units: seconds
     while(rollerSpinTimer<timeDelay){
-        if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
+        if((topOptical.color()==red || topOptical.color()==blue || (topOptical.color()==green && acceptGreenForBlue)) && (bottomOptical.color()==red || bottomOptical.color()==blue && (bottomOptical.color()==green && acceptGreenForBlue))){ //Automatic Roller Spinning Only works if both sensors have a color
             rollerSpin(onRedSide);
         }else{
             Controller1.rumble("-----");

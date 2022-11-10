@@ -23,17 +23,22 @@
 // intakeMotors         motor_group   4, 5            
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
+// "vex.h" library is necessary for all VEXcode programs
 #include "vex.h"
+// "iostream" allows us to print to the terminal and use std::strings.
 #include "iostream"
-
+// "confic.cpp" has almost all configuration variables that we may want to adjust
 #include "config.cpp"
 
-//#include "autonFunctions.cpp"
+// "autonRoutines.cpp" contains all the autonomous routines
 #include "autonRoutines.cpp"
+// "driverFunctions.cpp" contains all functions used in driving.
 #include "driverFunctions.cpp"
 
+//This includes all files from sylib. We haven't used this yet but plan to.
 #include "sylib/sylib.hpp"
 
+//This tells the code to default to interpreting all our code in the context of vex
 using namespace vex;
 
 // A global instance of competition
@@ -47,8 +52,6 @@ competition Competition;
  * TODO: Create better X drive autonomous methods (maybe a class??)
  * TODO: Add air-saving code to limit index pneumatic actuation to allow enough air for the endgame.
  * TODO: Possibly change indexTime throughout the match to account for having less air pressure at the end of the match. 
- * TODO: Add Partner Controller Support
- * TODO: Test auton select
  * 
  * !test
  * ?test
@@ -56,23 +59,10 @@ competition Competition;
  * Example changes to a comment
  */
 
-
-
-/* Game Auton Routines
- * 0: Do Nothing
- * 1: Push preloads into low goal
- * 2: Spin Roller to RED (Can be used in Skills)
- *      -Starts on Left Side
- * 3: Spin Roller to BLUE
- *      -Starts on Right Side
- * 
- * Skills Routines:
- * 11: Spin Roller, Shoot preloads into low goal and spins another roller (To RED for Skills)
- * 
+/* Pre auton runs when the code is paused by the field controller. 
+ * This is where we run the brain screen auton selection.
+ * The brain screen auton selector sets the variable 'autonSelect', declared and defined to a default value in "config.cpp" 
  */
-
-//bool onRedSide = true;
-
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
@@ -88,32 +78,20 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              Autonomous Task                              */
-/*                                                                           */
-/*  This task is used to control your robot during the autonomous phase of   */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
-
+/* the autonomous function runs at the begining of our autonomous period. 
+ * we call our own function here, 'runAuton' which references the variable from the brain screen auton selector to decide which auton routine to run
+ *
+ */
 void autonomous(void) {
   runAuton(autonSelect); // References "autonRoutines.cpp"
   //rollerSpinAuton(true);
   //Test123456
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              User Control Task                            */
-/*                                                                           */
-/*  This task is used to control your robot during the user control phase of */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
-
+/* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
+ * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
+ * We also setup some code for displaying brain images and turn on the lights on the optical sensors.
+ */
 void usercontrol(void) {
   // User control code here, inside the loop
   driverStarted = true;
@@ -164,18 +142,34 @@ void usercontrol(void) {
       enableFlywheel = !enableFlywheel;
       readyPress = readyPressDelay;
     }
+
     if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing())&& readyPress<=0){
       indexPneumatic.set(true);
       flywheelDelay = indexTime;
       readyPress = readyPressDelay;
     }
     
+
+    // if(flywheelDelay<=0){
+    //    indexPneumatic.set(false);
+    // }
+
+    //When flywheelDelay>0 cylinder is extended
+    //When flywheelDelay is between 0 and -indexTimeBetweenDiscs the cylinder is retracted
+    //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
+    //If not pressed, then the cylinder is told to retract again.
   
+    if(Controller1.ButtonL1.pressing() || Controller2.ButtonL2.pressing()){
+      if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
+    }
+    
+    if(flywheelDelay>0) indexPneumatic.set(true);
+    else indexPneumatic.set(false);
     
     readyPress--;
     flywheelDelay--;
+    
 
-    if(flywheelDelay<=0) indexPneumatic.set(false); 
 
     // if(enableFlywheel) {
     //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
