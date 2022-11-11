@@ -11,7 +11,7 @@ bool enableSlowDrive = true;
 bool enableFwdRevSlowDrive = true;
 bool enableLeftRightSlowDrive = true;
 bool enableTurnSlowDrive = true;
-bool enableXDriveBrainPrinting = true;
+bool enableXDriveBrainPrinting = false;
 
 //enableFlywheelSpeedControl controls the flywheel speed on the up and down buttons of Controller1
 
@@ -22,10 +22,10 @@ double flywheelSpeed = 12;
 double flywheelSpeedStep = 0.5;
 
 //readyPressDelay is the number of drive while() cycles between accepting single-press actions like launching a disc or pressing the brain screen.
-int readyPressDelay = 2;
+int readyPressDelay = 20;
 //indexTime is the number of drive while() cycles between contracting and extending the index pneumatic
-int indexTime = 1;
-int indexTimeBetweenDiscs = 10;
+int indexTime = 10;
+int indexTimeBetweenDiscs = 50;
 
 
 

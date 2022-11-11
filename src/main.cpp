@@ -78,20 +78,20 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
-/* the autonomous function runs at the begining of our autonomous period. jjjjj
+/* the autonomous function runs at the beginning of our autonomous period. jjjjj
  * we call our own function here, 'runAuton' which references the variable from the brain screen auton selector to decide which auton routine to run
  *
  */
 void autonomous(void) {
-  runAuton(5); // References "autonRoutines.cpp"
+  runAuton(autonSelect); // References "autonRoutines.cpp"
   //rollerSpinAuton(true);
   //Test123456
 }
 void doNothing(){
 }
-// void alsoNothing(){
+void alsoNothing(){
 
-// }
+}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
@@ -109,16 +109,16 @@ void usercontrol(void) {
   bottomOptical.setLightPower(90,pct);
   
 
-  timer endgameTimer;
-  endgameTimer.clear();
+  //timer endgameTimer;
+  //endgameTimer.clear();
 
   while (1) {
-    Controller2.Screen.clearScreen();
+    driverStarted = true;
+    //Controller2.Screen.clearScreen();
     if(!Controller2.ButtonA.pressing() && !Controller2.ButtonB.pressing() && !Controller2.ButtonX.pressing() && !Controller2.ButtonY.pressing() && !Controller2.ButtonUp.pressing() && !Controller2.ButtonDown.pressing() && !Controller2.ButtonLeft.pressing() && !Controller2.ButtonRight.pressing() && !Controller2.ButtonL1.pressing() && !Controller2.ButtonL2.pressing()){
       Controller2PressedLast = false;
     }
-    Controller1.Screen.setCursor(4,1);
-    Controller1.Screen.print("C2: %d", Controller2PressedLast);
+    
     if(displayImages){
       //const char * img = names[imgPos].c_str();;
       
@@ -155,7 +155,7 @@ void usercontrol(void) {
     }
     
 
-    // if(flywheelDelay<=0){m  mmmmdmcm
+    // if(flywheelDelay<=0){
     //    indexPneumatic.set(false);  
     // }
 
@@ -179,7 +179,7 @@ void usercontrol(void) {
     // if(enableFlywheel) {
     //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
     // } else{
-    //   flywheelMotors.stop(coast); wwhhxyzhxyjj
+    //   flywheelMotors.stop(coast); 
     // }
     if(enableFlywheel) {
       flywheelMotors.spin(fwd,flywheelSpeed,volt);
@@ -188,16 +188,17 @@ void usercontrol(void) {
     }
     
     if(!displayImages){
-      Brain.Screen.newLine();
-      Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
       Brain.Screen.newLine();
       Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
-      Brain.Screen.newLine();
-      Brain.Screen.print("Top:%d",topOptical.hue());
-      Brain.Screen.newLine();
-      Brain.Screen.print("Bottom: %d",bottomOptical.hue());
-      std::cout << topOptical.hue();
-      std::cout << "\n";
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("Top:%d",topOptical.hue());
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("Bottom: %d",bottomOptical.hue());
+      std::cout << "flywheelDelay: ";
+      std::cout << flywheelDelay;
+      std::cout << "\n t3 ";
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
@@ -223,14 +224,11 @@ void usercontrol(void) {
 
     runDriverRollerSpinning(true);
     
-    if(endgameTimer.time()>((60+35)*1000)){
-      Controller1.Screen.setCursor(4,10);
-      Controller1.Screen.print("Endgame");
-    } 
-    Controller2.Screen.setCursor(1,1);
-    Controller2.Screen.print("Top:%d",topOptical.hue());
-    Controller2.Screen.newLine();
-    Controller2.Screen.print("Bottom: %d",bottomOptical.hue());
+    // if(endgameTimer.time()>((60+35)*1000)){
+    //   Controller1.Screen.setCursor(4,10);
+    //   Controller1.Screen.print("Endgame");
+    // } 
+    
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.

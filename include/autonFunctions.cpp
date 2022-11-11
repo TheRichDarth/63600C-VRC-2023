@@ -228,7 +228,18 @@ void turnRight(float angle){
 }
 
 
-
+bool topRollerRed(){
+  return topOptical.hue()<=40 || topOptical.hue()>340;
+}
+bool topRollerBlue(){
+  return topOptical.hue()<=250 && topOptical.hue()>=140;
+}
+bool bottomRollerRed(){
+  return bottomOptical.hue()<=40 || topOptical.hue()>340;
+}
+bool bottomRollerBlue(){
+  return bottomOptical.hue()<=250 && bottomOptical.hue()>=140;
+}
 
 
 
@@ -249,8 +260,8 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     vex::directionType preferredDirection = forward;
     const char * rumblePattern = ".";
     rollerMotor.setStopping(brake);
-    if(topOptical.color()==red){ //Red
-      if(bottomOptical.color()==red){
+    if(topRollerRed()){ //Red
+      if(bottomRollerRed()){
         //R/R
         if(onRedSide){
           //Rotate Up
@@ -271,7 +282,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
         }
       }
     }else{ //Blue
-      if(bottomOptical.color()==red){
+      if(bottomRollerRed()){
         //B/R
         if(onRedSide){
           //Rotate Down (either)
@@ -302,7 +313,7 @@ void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue 
     rollerSpinTimer.clear();
     float rollerSpinTime = 2.5; //Units: seconds
     while(rollerSpinTimer<timeDelay){
-        if((topOptical.color()==red || topOptical.color()==blue || (topOptical.color()==green && acceptGreenForBlue)) && (bottomOptical.color()==red || bottomOptical.color()==blue && (bottomOptical.color()==green && acceptGreenForBlue))){ //Automatic Roller Spinning Only works if both sensors have a color
+        if((topRollerRed() || topRollerBlue()) && (bottomRollerRed() || bottomRollerBlue())){ //Automatic Roller Spinning Only works if both sensors have a color
             rollerSpin(onRedSide);
         }else{
             Controller1.rumble("-----");
