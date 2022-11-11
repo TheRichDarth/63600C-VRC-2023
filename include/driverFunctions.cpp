@@ -12,19 +12,24 @@ void incrementImg(){
 }
 
 void flywheelSpeedControl(){
-  
   if(enableFlywheelSpeedControl){
     if(Controller2.ButtonUp.pressing() && !Controller2PressedLast){
       flywheelSpeed+=flywheelSpeedStep;
       Controller2PressedLast = true;
+      Controller2.Screen.setCursor(4,1);
+      Controller2.Screen.clearLine();
+      Controller2.Screen.print("Flywheel: ");
+      Controller2.Screen.print(flywheelSpeed);
+      Controller2.Screen.print(" Volts");
     }else if(Controller2.ButtonDown.pressing() && !Controller2PressedLast){
       flywheelSpeed-=flywheelSpeedStep;
       Controller2PressedLast = true;
+      Controller2.Screen.setCursor(4,1);
+      Controller2.Screen.clearLine();
+      Controller2.Screen.print("Flywheel: ");
+      Controller2.Screen.print(flywheelSpeed);
+      Controller2.Screen.print(" Volts");
     }
-    Controller2.Screen.setCursor(4,1);
-    Controller2.Screen.print("Flywheel: ");
-    Controller2.Screen.print(flywheelSpeed);
-    Controller2.Screen.print(" Volts");
   }
 }
 /* runDriverRollerSpinning:
@@ -34,11 +39,11 @@ void flywheelSpeedControl(){
  * Parameter:
  * onRedSide: controls which side the code will score the roller for
  */
-void runDriverRollerSpinning(bool onRedSide){
+void runDriverRollerSpinning(bool onRedSide, bool acceptGreenForBlue = true){
     if(Controller1.ButtonX.pressing())autoRollerSpinning = false;
     // Roller Spinning (Nested Ifs galore)
     if(/*Controller1.ButtonX.pressing() &&*/ autoRollerSpinning){ //If roller button is being pressed
-      if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
+      if((topRollerRed() || topRollerBlue()) && (bottomRollerRed() || bottomRollerBlue())){ //Automatic Roller Spinning Only works if both sensors have a color
         rollerSpin(onRedSide, 30);
       }else{//Driver is trying to spin a roller but the sensors don't both have a reading
         //Controller1.rumble("-");

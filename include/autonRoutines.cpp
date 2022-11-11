@@ -121,12 +121,38 @@ void skillsAuton2(){
     autonRollerSpinning(true,2.5*1000);
     
 }
-void gameAutonLeft(){
-    driveLeft(6,inches);
+void gameAutonRight1(bool onRedSide){
+    //Step 1: Drive to the Roller
+    driveTimeout(5,sec);
+    driveLeft(24,inches,30,velocityUnits::pct);
+    driveTimeout(2,sec);
+    driveFwd(6,inches, false);
 
+    //Step 2: Spin roller
+    autonRollerSpinning(onRedSide,5000);
+    rollerMotor.stop(brake);
+    //Step 3: turn around and aim
+    flywheelMotors.spin(fwd,12,volt);
+    driveRev(6,inches);
+    turnRight(830,degrees,15,velocityUnits::pct, true);
+    wait(3,sec);
+    driveFwd(5,inches,15,velocityUnits::pct);
+    //Step 4: Fire 3 discs
+    for(int i = 0; i<3; i++){
+        indexPneumatic.set(true);
+        wait(200,msec);
+        indexPneumatic.set(false);
+        wait(1500,msec);
+    }
+    flywheelMotors.stop(coast);
 
 }
 
+void skillsAdditionToGameAutonRight1(){
+    gameAutonRight1(true);
+    turnLeft(45);
+    //Fire Endgame
+}
 
 
 /* Game Auton Routines
@@ -139,7 +165,9 @@ void gameAutonLeft(){
  * 
  * Skills Routines:
  * 4: Spin Roller, Shoot preloads into low goal and spins another roller (To RED for Skills)
- * 
+ * 5: Game Auton Right RED
+ * 6: Game Auton Right BLUE
+ * 7 Skills Auton extended from game auton right
  */
 void runAuton(int autonSelect){
     switch (autonSelect){
@@ -158,7 +186,13 @@ void runAuton(int autonSelect){
         skillsAuton2();
         break;
     case 5:
-        gameAutonLeft();
+        gameAutonRight1(false);
+        break;
+    case 6:
+        gameAutonRight1(false);
+        break;
+    case 7:
+        skillsAdditionToGameAutonRight1();
         break;
 
 

@@ -56,10 +56,10 @@ void driveRev(float distance){
   driveRev(distance,defaultRotationUnits);
 }
 void driveLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
+  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
+  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
 void driveLeft(float distance,rotationUnits distanceUnits){
   driveLeft(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
@@ -68,9 +68,9 @@ void driveLeft(float distance){
   driveLeft(distance,defaultRotationUnits);
 }
 void driveRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
+  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
 void driveRight(float distance,rotationUnits distanceUnits){
@@ -80,10 +80,10 @@ void driveRight(float distance){
   driveRight(distance,defaultRotationUnits);
 }
 void turnRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
+  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
+  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
 void turnRight(float distance,rotationUnits distanceUnits){
   turnRight(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
@@ -92,10 +92,10 @@ void turnRight(float distance,rotationUnits distanceUnits){
 //   turnRight(distance,defaultRotationUnits);
 // }
 void turnLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
+  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
+  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
+  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
 }
 void turnLeft(float distance,rotationUnits distanceUnits){
   turnLeft(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
@@ -228,7 +228,18 @@ void turnRight(float angle){
 }
 
 
-
+bool topRollerRed(){
+  return topOptical.hue()<=40 || topOptical.hue()>340;
+}
+bool topRollerBlue(){
+  return topOptical.hue()<=250 && topOptical.hue()>=140;
+}
+bool bottomRollerRed(){
+  return bottomOptical.hue()<=40 || topOptical.hue()>340;
+}
+bool bottomRollerBlue(){
+  return bottomOptical.hue()<=250 && bottomOptical.hue()>=140;
+}
 
 
 
@@ -249,8 +260,8 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     vex::directionType preferredDirection = forward;
     const char * rumblePattern = ".";
     rollerMotor.setStopping(brake);
-    if(topOptical.color()==red){ //Red
-      if(bottomOptical.color()==red){
+    if(topRollerRed()){ //Red
+      if(bottomRollerRed()){
         //R/R
         if(onRedSide){
           //Rotate Up
@@ -271,7 +282,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
         }
       }
     }else{ //Blue
-      if(bottomOptical.color()==red){
+      if(bottomRollerRed()){
         //B/R
         if(onRedSide){
           //Rotate Down (either)
@@ -297,12 +308,12 @@ void rollerSpin(bool onRedSide){
   rollerSpin(onRedSide,90);
 }
 
-void autonRollerSpinning(bool onRedSide, int timeDelay){
+void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue = true){
   timer rollerSpinTimer;
     rollerSpinTimer.clear();
     float rollerSpinTime = 2.5; //Units: seconds
     while(rollerSpinTimer<timeDelay){
-        if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
+        if((topRollerRed() || topRollerBlue()) && (bottomRollerRed() || bottomRollerBlue())){ //Automatic Roller Spinning Only works if both sensors have a color
             rollerSpin(onRedSide);
         }else{
             Controller1.rumble("-----");
@@ -348,7 +359,6 @@ int autonSelectBank = 0;
 int maxAutonBank = 3;
 bool finalAutonSelection = false;
 bool pressedLast = false;
-
 /* Game Auton Routines
  * 0: Do Nothing
  * 1: Push preloads into low goal
@@ -359,10 +369,12 @@ bool pressedLast = false;
  * 
  * Skills Routines:
  * 4: Spin Roller, Shoot preloads into low goal and spins another roller (To RED for Skills)
- * 
+ * 5: Game Auton Right RED
+ * 6: Game Auton Right BLUE
+ * 7 Skills Auton extended from game auton right
  */
 
-int autonSelect = 1;
+int autonSelect = 5;
 const int numAutonRoutines = 12;
 const std::string autonRoutineNames[numAutonRoutines] = {
     "0.Do Nothing",
@@ -371,9 +383,9 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "3.BLUE-Spin Roller",
 
     "4.Skills-2",
-    "5.Xyz",
-    "6.Xyz",
-    "7.Xyz",
+    "5.RED-RightGame",
+    "6.BLUE-RightGame",
+    "7.Skills-rgEX",
 
     "8.Xyz",
     "9.Xyz",
@@ -387,9 +399,9 @@ const std::string autonRoutineDescriptions[numAutonRoutines] = {
     "10 points. Drives forward slightly and automatically spins roller for BLUE for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
     
     "?? points. New untested",
-    "n points",
-    "n points",
-    "n points",
+    "20 points",
+    "20 points",
+    "20+endgame points",
     
     "n points",
     "n points",
