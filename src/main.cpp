@@ -143,16 +143,16 @@ void usercontrol(void) {
       Brain.Screen.newLine();
       Brain.Screen.print("Ready Press = %d",readyPress);
     }
-    if((Controller1.ButtonX.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
+    if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
       enableFlywheel = !enableFlywheel;
       readyPress = readyPressDelay;
     }
 
-    if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing())&& readyPress<=0){
-      indexPneumatic.set(true);
-      flywheelDelay = indexTime;
-      readyPress = readyPressDelay;
-    }
+    // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
+    //   indexPneumatic.set(true);
+    //   flywheelDelay = indexTime;
+    //   readyPress = readyPressDelay;
+    // }
     
 
     // if(flywheelDelay<=0){
@@ -164,7 +164,7 @@ void usercontrol(void) {
     //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
     //If not pressed, then the cylinder is told to retract again.
   
-    if(Controller1.ButtonL1.pressing() || Controller2.ButtonL2.pressing()){
+    if(Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()){
       if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
     }
     
@@ -196,9 +196,14 @@ void usercontrol(void) {
       // Brain.Screen.print("Top:%d",topOptical.hue());
       // Brain.Screen.newLine();
       // Brain.Screen.print("Bottom: %d",bottomOptical.hue());
-      std::cout << "flywheelDelay: ";
-      std::cout << flywheelDelay;
-      std::cout << "\n t3 ";
+
+      // std::cout << "flywheelDelay: ";
+      // std::cout << flywheelDelay;
+      // std::cout << "\n t3 ";
+
+      std::cout << "Flywheel Vel: ";
+      std::cout << flywheelMotors.velocity(rpm);
+      std::cout << "\n";
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
