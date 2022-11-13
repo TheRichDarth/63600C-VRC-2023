@@ -117,6 +117,8 @@ void usercontrol(void) {
 
   //sylib::Motor flywheelSyl = sylib::Motor(14,600, true);
 
+  Controller2.Screen.clearScreen();
+
   while (1) {
     driverStarted = true;
     //Controller2.Screen.clearScreen();
@@ -140,6 +142,7 @@ void usercontrol(void) {
     //Put Brain screen print code here to monitor values, etc.
     //Brain.Screen.printAt(20,20,"test1");;
     }
+    Controller2.Screen.clearScreen();
 
     flywheelSpeedControl();  
     xDrive();
