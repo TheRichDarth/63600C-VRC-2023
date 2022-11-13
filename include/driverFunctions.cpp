@@ -15,16 +15,30 @@ void flywheelSpeedControl(){
   if(enableFlywheelSpeedControl){
     if(Controller2.ButtonUp.pressing() && !Controller2PressedLast){
       flywheelSpeed+=flywheelSpeedStep;
-      Controller2PressedLast = true;     
+      if(flywheelSpeed>12.0) flywheelSpeed = 12.0;
+      Controller2PressedLast = true;
+      Controller2.Screen.clearLine();
+      Controller2.Screen.print("Flywheel: ");
+      Controller2.Screen.print(flywheelSpeed);
+      Controller2.Screen.print(" Volts");
     }else if(Controller2.ButtonDown.pressing() && !Controller2PressedLast){
       flywheelSpeed-=flywheelSpeedStep;
+      if(flywheelSpeed<flywheelMinSpeed)flywheelSpeed = flywheelMinSpeed;
       Controller2PressedLast = true;
+      Controller2.Screen.setCursor(4,1);
+      Controller2.Screen.clearLine();
+      Controller2.Screen.print("Flywheel: ");
+      Controller2.Screen.print(flywheelSpeed);
+      Controller2.Screen.print(" Volts");
     }
-    Controller2.Screen.setCursor(4,1);
-    Controller2.Screen.clearLine();
-    Controller2.Screen.print("Flywheel: ");
-    Controller2.Screen.print(flywheelSpeed);
-    Controller2.Screen.print(" Volts");
+    // if((Controller2.ButtonDown.pressing() || Controller2.ButtonUp.pressing())&& !Controller2PressedLast){
+    //   Controller2.Screen.clearScreen();
+    //   Controller2.Screen.setCursor(4,1);
+    //   Controller2.Screen.clearLine();
+    //   Controller2.Screen.print("Flywheel: ");
+    //   Controller2.Screen.print(flywheelSpeed);
+    //   Controller2.Screen.print(" Volts");
+    // }
   }
 }
 /* runDriverRollerSpinning:

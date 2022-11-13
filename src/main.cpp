@@ -87,8 +87,8 @@ void autonomous(void) {
   //rollerSpinAuton(true);
   //Test123456
 }
-void doNothing(){
-}
+// void doNothing(){
+// }
 void alsoNothing(){
 
 }
@@ -118,7 +118,7 @@ void usercontrol(void) {
   //sylib::Motor flywheelSyl = sylib::Motor(14,600, true);
 
   Controller2.Screen.clearScreen();
-
+  Brain.Screen.clearScreen();
   while (1) {
     driverStarted = true;
     //Controller2.Screen.clearScreen();
@@ -142,7 +142,7 @@ void usercontrol(void) {
     //Put Brain screen print code here to monitor values, etc.
     //Brain.Screen.printAt(20,20,"test1");;
     }
-    Controller2.Screen.clearScreen();
+    //Controller2.Screen.clearScreen();
 
     flywheelSpeedControl();  
     xDrive();
@@ -198,8 +198,16 @@ void usercontrol(void) {
     if(!displayImages){
       // Brain.Screen.newLine();
       // Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
+      
+      Brain.Screen.setCursor(6,1);
       Brain.Screen.newLine();
       Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("R: %d",redSwitch.value(rotationUnits::deg));
+
+      // Controller1.Screen.setCursor(4,1);
+      // Controller1.Screen.clearLine();
+      // Controller1.Screen.print("FlywheelDelay = %d",flywheelDelay);
       // Brain.Screen.newLine();
       // Brain.Screen.print("Top:%d",topOptical.hue());
       // Brain.Screen.newLine();
@@ -214,14 +222,17 @@ void usercontrol(void) {
       // std::cout << "\n";
 
       //timer (ms), flywheelVel, index state, sylib vel, 
-      std::cout << flywheelLogTimer.time(msec);
-      std::cout << ",";
-      std::cout << flywheelMotors.velocity(rpm);
-      std::cout << ",";
-      std::cout << indexPneumatic.value();
+      // std::cout << flywheelLogTimer.time(msec);
+      // std::cout << ",";
+      // std::cout << flywheelMotors.velocity(rpm);
+      // std::cout << ",";
+      // std::cout << indexPneumatic.value();
+      // std::cout << "\n";
       //std::cout << ",";
       //std::cout << flywheelSyl.get_velocity();
 
+      std::cout << "Test2";
+      std::cout << "\n";
       
     }
     if(Controller1.ButtonR1.pressing()){
@@ -245,8 +256,11 @@ void usercontrol(void) {
       endgame.set(false);
     }
 
-
-    runDriverRollerSpinning(true);
+    if(redSwitch.value(deg)<180){ // Red
+      runDriverRollerSpinning(true);
+    }else{ // Blue
+      runDriverRollerSpinning(false);
+    }
     
     // if(endgameTimer.time()>((60+35)*1000)){
     //   Controller1.Screen.setCursor(4,10);

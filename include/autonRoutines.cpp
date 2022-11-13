@@ -150,8 +150,15 @@ void gameAutonRight1(bool onRedSide){
 
 void skillsAdditionToGameAutonRight1(){
     gameAutonRight1(true);
-    turnLeft(45);
+    turnLeft(190,degrees,15,velocityUnits::pct, true);
+    wait(10,sec);
     //Fire Endgame
+    for(int i = 0; i<5; i++){
+        endgame.set(true);
+        wait(8,sec);
+        endgame.set(false);
+        wait(8,sec);
+    }
 }
 
 
@@ -186,7 +193,7 @@ void runAuton(int autonSelect){
         skillsAuton2();
         break;
     case 5:
-        gameAutonRight1(false);
+        gameAutonRight1(true);
         break;
     case 6:
         gameAutonRight1(false);
