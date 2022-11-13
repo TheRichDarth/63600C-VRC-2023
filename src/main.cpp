@@ -112,6 +112,11 @@ void usercontrol(void) {
   //timer endgameTimer;
   //endgameTimer.clear();
 
+  timer flywheelLogTimer;
+  flywheelLogTimer.clear();
+
+  //sylib::Motor flywheelSyl = sylib::Motor(14,600, true);
+
   while (1) {
     driverStarted = true;
     //Controller2.Screen.clearScreen();
@@ -201,9 +206,20 @@ void usercontrol(void) {
       // std::cout << flywheelDelay;
       // std::cout << "\n t3 ";
 
-      std::cout << "Flywheel Vel: ";
+      // std::cout << "Flywheel Vel: ";
+      // std::cout << flywheelMotors.velocity(rpm);
+      // std::cout << "\n";
+
+      //timer (ms), flywheelVel, index state, sylib vel, 
+      std::cout << flywheelLogTimer.time(msec);
+      std::cout << ",";
       std::cout << flywheelMotors.velocity(rpm);
-      std::cout << "\n";
+      std::cout << ",";
+      std::cout << indexPneumatic.value();
+      //std::cout << ",";
+      //std::cout << flywheelSyl.get_velocity();
+
+      
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
