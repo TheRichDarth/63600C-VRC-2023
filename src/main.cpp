@@ -231,7 +231,7 @@ void usercontrol(void) {
       //std::cout << ",";
       //std::cout << flywheelSyl.get_velocity();
 
-      std::cout << "Test2";
+      std::cout << "Test3";
       std::cout << "\n";
       
     }

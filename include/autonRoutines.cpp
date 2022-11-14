@@ -134,7 +134,7 @@ void gameAutonRight1(bool onRedSide){
     //Step 3: turn around and aim
     flywheelMotors.spin(fwd,12,volt);
     driveRev(6,inches);
-    turnRight(830,degrees,15,velocityUnits::pct, true);
+    turnRight(850,degrees,15,velocityUnits::pct, true);
     wait(3,sec);
     driveFwd(5,inches,15,velocityUnits::pct);
     //Step 4: Fire 3 discs
