@@ -28,6 +28,8 @@ extern vision visionAim;
 extern controller Controller2;
 extern pot redSwitch;
 
+//sylib::Motor flywheelSyl;
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  * 

@@ -32,6 +32,8 @@ digital_out endgame = digital_out(Brain.ThreeWirePort.B);
 //vision visionAim = vision (PORT14, 50);
 /*vex-vision-config:end*/
 
+
+
 // VEXcode generated functions
 // define variable for remote controller enable/disable
 bool RemoteControlCodeEnabled = true;

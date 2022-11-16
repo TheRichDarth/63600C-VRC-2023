@@ -25,6 +25,8 @@
 
 // "vex.h" library is necessary for all VEXcode programs
 #include "vex.h"
+//This includes all files from sylib. We haven't used this yet but plan to.
+#include "sylib/sylib.hpp"
 // "iostream" allows us to print to the terminal and use std::strings.
 #include "iostream"
 // "confic.cpp" has almost all configuration variables that we may want to adjust
@@ -35,15 +37,11 @@
 // "driverFunctions.cpp" contains all functions used in driving.
 #include "driverFunctions.cpp"
 
-//This includes all files from sylib. We haven't used this yet but plan to.
-#include "sylib/sylib.hpp"
-
 //This tells the code to default to interpreting all our code in the context of vex
 using namespace vex;
 
 // A global instance of competition
 competition Competition;
-
 
 
 /**
@@ -115,7 +113,7 @@ void usercontrol(void) {
   timer flywheelLogTimer;
   flywheelLogTimer.clear();
 
-  //sylib::Motor flywheelSyl = sylib::Motor(14,600, true);
+  
 
   Controller2.Screen.clearScreen();
   Brain.Screen.clearScreen();
@@ -221,19 +219,18 @@ void usercontrol(void) {
       // std::cout << flywheelMotors.velocity(rpm);
       // std::cout << "\n";
 
-      //timer (ms), flywheelVel, index state, sylib vel, 
-      // std::cout << flywheelLogTimer.time(msec);
+      //timer (ms), flywheel voltage flywheelVel, index state, sylib vel, 
+      std::cout << flywheelLogTimer.time(msec);
+      std::cout << ",";
+      std::cout << flywheelSpeed;
+      std::cout << ",";
+      std::cout << flywheelMotors.velocity(rpm);
+      std::cout << ",";
+      std::cout << indexPneumatic.value();
       // std::cout << ",";
-      // std::cout << flywheelMotors.velocity(rpm);
-      // std::cout << ",";
-      // std::cout << indexPneumatic.value();
-      // std::cout << "\n";
-      //std::cout << ",";
-      //std::cout << flywheelSyl.get_velocity();
+      // std::cout << flywheelSyl.get_velocity();
 
-      std::cout << "Test3";
       std::cout << "\n";
-      
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
