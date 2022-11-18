@@ -311,7 +311,7 @@ void rollerSpin(bool onRedSide){
 void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue = true){
   timer rollerSpinTimer;
     rollerSpinTimer.clear();
-    float rollerSpinTime = 2.5; //Units: seconds
+    //float rollerSpinTime = 2.5; //Units: seconds
     while(rollerSpinTimer<timeDelay){
         if((topRollerRed() || topRollerBlue()) && (bottomRollerRed() || bottomRollerBlue())){ //Automatic Roller Spinning Only works if both sensors have a color
             rollerSpin(onRedSide);
@@ -415,9 +415,9 @@ const color routineColors[numAutonRoutines] = {
     color(80, 69, 232),
 
     color(161,69,232),
-    color(232,69,221),
-    color(232,69,140),
-    color(80,69,232),
+    color(232,80,69),
+    color(80, 69, 232),
+    color(80,232,69),
 
     color(252,244,52),
     color(255,255,255),

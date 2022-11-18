@@ -87,9 +87,9 @@ void autonomous(void) {
 }
 // void doNothing(){
 // }
-void alsoNothing(){
+// void alsoNothing(){
 
-}
+// }
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)

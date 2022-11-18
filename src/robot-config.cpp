@@ -25,6 +25,7 @@ motor intakeMotorsMotorB = motor(PORT13, ratio6_1, false);
 motor_group intakeMotors = motor_group(intakeMotorsMotorA, intakeMotorsMotorB);
 controller Controller2 = controller(controllerType::partner);
 pot redSwitch = pot(Brain.ThreeWirePort.C);
+distance leftDistance = distance(PORT3);
 
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
 digital_out endgame = digital_out(Brain.ThreeWirePort.B);

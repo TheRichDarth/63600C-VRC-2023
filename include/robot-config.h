@@ -27,6 +27,7 @@ extern signature visionAim__SIG_7;
 extern vision visionAim;
 extern controller Controller2;
 extern pot redSwitch;
+extern distance leftDistance;
 
 //sylib::Motor flywheelSyl;
 

@@ -150,7 +150,7 @@ void gameAutonRight1(bool onRedSide){
 
 void skillsAdditionToGameAutonRight1(){
     gameAutonRight1(true);
-    turnLeft(190,degrees,15,velocityUnits::pct, true);
+    turnLeft(210,degrees,15,velocityUnits::pct, true);
     wait(10,sec);
     //Fire Endgame
     for(int i = 0; i<5; i++){
@@ -161,6 +161,57 @@ void skillsAdditionToGameAutonRight1(){
     }
 }
 
+/* Skills Auton 3
+ * Shoots preloads, spins both rollers,drives through low goals to reach other side's rollers, scores them and launches endgame.
+ *
+ *
+ */
+void skillsAuton3(){
+    //Step 1: Shoot preloads into the high goal
+    flywheelMotors.spin(fwd,11.4,voltageUnits::volt);
+    wait(5,sec);
+    for(int i = 0; i<3; i++){
+        indexPneumatic.set(true);
+        wait(400,msec);
+        indexPneumatic.set(false);
+        wait(1000,msec);
+    }
+    //Step 2: Scores first roller
+    driveRev(8,inches);
+    turnRight(400,degrees,15,velocityUnits::pct);
+    driveFwd(8,inches, false);
+    autonRollerSpinning(true,4);
+    //Step 3: Scores second roller
+    driveRev(24,inches);
+    turnRight(400,degrees,15,velocityUnits::pct);
+    driveFwd(24,inches,false);
+    autonRollerSpinning(true,6);
+
+    //Step 4: Drive on route through blue low goal
+    driveRev(3,inches);
+    turnLeft(400,degrees);
+    
+    // float leftDistanceMin = 3;
+    // float leftDistanceMax = 5;
+
+    // while(leftDistance.value() <leftDistanceMin || leftDistance.value()>leftDistanceMax){
+    //     if(){
+    //         driveLeft(0.5,inches);
+    //     }
+    // }
+    driveTimeout(8,sec);
+    driveRev(108,inches);//Should run into the wall
+    driveFwd(3,inches);
+    turnLeft(400,degrees);
+    driveTimeout(1,sec);
+
+    //Step 5: Drive to next roller
+    
+
+
+
+
+}
 
 /* Game Auton Routines
  * 0: Do Nothing
