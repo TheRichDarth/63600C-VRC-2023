@@ -207,10 +207,39 @@ void skillsAuton3(){
 
     //Step 5: Drive to next roller
     
+}
 
+void gameAutonLeft(bool onRedSide){
+    //Spin the flywheel up to speed
+    flywheelMotors.spin(forward, 12,voltageUnits::volt);
+    wait(2,sec);
+    //Launch 3 discs
+    for(int i = 0; i<2; i++){
+        wait(2000,msec);
+        indexPneumatic.set(true);
+        wait(500,msec);
+        indexPneumatic.set(false);
+    }
+    wait(500,msec);
+    flywheelMotors.stop(coast);
+    // //drive forward 3 inches
+    // driveFwd(3,inches);
+    //turn 180 degrees
+    turnRight(800,degrees);
+    //drive forward 3 inches
+    // wait(1,sec);
+    driveFwd(3,inches);
+    //drive right 3 inches
+    //wait(1,sec);
+    driveRight(7,inches);
+    //drive forward 3 inches without waiting for completion
+    //wait(1,sec);
+    driveFwd(7,inches,false);
+    //Run auto roller spinning
+    //autonRollerSpinning(onRedSide,5000);
 
-
-
+    //Manually rotate roller
+    rollerMotor.spinFor(reverse, 90,rotationUnits::deg,70,velocityUnits::pct);
 }
 
 /* Game Auton Routines
@@ -251,6 +280,12 @@ void runAuton(int autonSelect){
         break;
     case 7:
         skillsAdditionToGameAutonRight1();
+        break;
+    case 8:
+        gameAutonLeft(true);
+        break;
+    case 9:
+        gameAutonLeft(false);
         break;
 
 
