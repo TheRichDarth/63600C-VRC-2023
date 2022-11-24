@@ -232,13 +232,13 @@ bool topRollerRed(){
   return topOptical.hue()<=40 || topOptical.hue()>340;
 }
 bool topRollerBlue(){
-  return topOptical.hue()<=250 && topOptical.hue()>=140;
+  return topOptical.hue()<=290 && topOptical.hue()>=125;
 }
 bool bottomRollerRed(){
   return bottomOptical.hue()<=40 || topOptical.hue()>340;
 }
 bool bottomRollerBlue(){
-  return bottomOptical.hue()<=250 && bottomOptical.hue()>=140;
+  return bottomOptical.hue()<=290 && bottomOptical.hue()>=125;
 }
 
 
@@ -259,7 +259,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     //int rollerVelocity = 90;
     vex::directionType preferredDirection = forward;
     const char * rumblePattern = ".";
-    rollerMotor.setStopping(brake);
+    rollerMotor.setStopping(coast);
     if(topRollerRed()){ //Red
       if(bottomRollerRed()){
         //R/R
@@ -305,7 +305,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     }
 }
 void rollerSpin(bool onRedSide){
-  rollerSpin(onRedSide,90);
+  rollerSpin(onRedSide,45);
 }
 
 void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue = true){
@@ -316,7 +316,23 @@ void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue 
         if((topRollerRed() || topRollerBlue()) && (bottomRollerRed() || bottomRollerBlue())){ //Automatic Roller Spinning Only works if both sensors have a color
             rollerSpin(onRedSide);
         }else{
-            Controller1.rumble("-----");
+          if(onRedSide){
+            if(topRollerRed()){
+              Controller1.rumble("- .");
+            }else if(topRollerBlue()){
+              rollerMotor.spin(fwd,60,velocityUnits::pct);
+            }else{
+              Controller1.rumble("...");
+            }
+          }else{
+            if(topRollerBlue()){
+              Controller1.rumble("- .");
+            }else if(topRollerRed()){
+              rollerMotor.spin(fwd,60,velocityUnits::pct);
+            }else{
+              Controller1.rumble("...");
+            }
+          }
         }
     }
 }
@@ -374,7 +390,7 @@ bool pressedLast = false;
  * 7 Skills Auton extended from game auton right
  */
 
-int autonSelect = 8;
+int autonSelect = 5;
 const int numAutonRoutines = 12;
 const std::string autonRoutineNames[numAutonRoutines] = {
     "0.Do Nothing",

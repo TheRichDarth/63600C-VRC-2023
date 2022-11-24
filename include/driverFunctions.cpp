@@ -49,6 +49,7 @@ void flywheelSpeedControl(){
  * onRedSide: controls which side the code will score the roller for
  */
 void runDriverRollerSpinning(bool onRedSide, bool acceptGreenForBlue = true){
+  if(Controller1.ButtonR1.pressing() || Controller1.ButtonR2.pressing()) return;
     if(Controller1.ButtonX.pressing())autoRollerSpinning = false;
     // Roller Spinning (Nested Ifs galore)
     if(/*Controller1.ButtonX.pressing() &&*/ autoRollerSpinning){ //If roller button is being pressed

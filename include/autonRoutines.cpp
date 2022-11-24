@@ -228,18 +228,18 @@ void gameAutonLeft(bool onRedSide){
     turnRight(800,degrees);
     //drive forward 3 inches
     // wait(1,sec);
-    driveFwd(3,inches);
+    driveFwd(4,inches);
     //drive right 3 inches
     //wait(1,sec);
-    driveRight(7,inches);
+    driveRight(7.5,inches);
     //drive forward 3 inches without waiting for completion
     //wait(1,sec);
     driveFwd(7,inches,false);
     //Run auto roller spinning
-    //autonRollerSpinning(onRedSide,5000);
-
+    autonRollerSpinning(onRedSide,5000);
+    wait(1,sec);
     //Manually rotate roller
-    rollerMotor.spinFor(reverse, 90,rotationUnits::deg,70,velocityUnits::pct);
+    //rollerMotor.spinFor(reverse, 90,rotationUnits::deg,70,velocityUnits::pct);
 }
 
 /* Game Auton Routines
