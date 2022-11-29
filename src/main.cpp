@@ -152,6 +152,14 @@ void usercontrol(void) {
     if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
       enableFlywheel = !enableFlywheel;
       readyPress = readyPressDelay;
+      Controller2.Screen.setCursor(2,1);
+      Controller2.Screen.print("Flywheel: ");
+      if(enableFlywheel){
+        Controller2.Screen.print("On ");
+      }else{
+        Controller2.Screen.print("Off");
+      }
+      Controller2.rumble("-");
     }
 
     // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
