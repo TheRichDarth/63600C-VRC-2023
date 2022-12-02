@@ -178,7 +178,7 @@ void usercontrol(void) {
     //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
     //If not pressed, then the cylinder is told to retract again.
   
-    if(Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()){
+    if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
       if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
     }
     

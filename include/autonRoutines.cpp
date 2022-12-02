@@ -150,7 +150,7 @@ void gameAutonRight1(bool onRedSide){
 
 void skillsAdditionToGameAutonRight1(){
     gameAutonRight1(true);
-    turnLeft(210,degrees,15,velocityUnits::pct, true);
+    turnLeft(190,degrees,15,velocityUnits::pct, true);
     wait(10,sec);
     //Fire Endgame
     for(int i = 0; i<5; i++){
@@ -240,6 +240,12 @@ void gameAutonLeft(bool onRedSide){
     wait(1,sec);
     //Manually rotate roller
     //rollerMotor.spinFor(reverse, 90,rotationUnits::deg,70,velocityUnits::pct);
+}
+
+void five_right_game(bool onRedSide){
+    gameAutonRight1(onRedSide);
+    turnRight(850,30);
+
 }
 
 /* Game Auton Routines

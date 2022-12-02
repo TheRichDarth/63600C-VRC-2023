@@ -17,6 +17,7 @@ void flywheelSpeedControl(){
       flywheelSpeed+=flywheelSpeedStep;
       if(flywheelSpeed>12.0) flywheelSpeed = 12.0;
       Controller2PressedLast = true;
+      Controller2.Screen.setCursor(4,1);
       Controller2.Screen.clearLine();
       Controller2.Screen.print("Flywheel: ");
       Controller2.Screen.print(flywheelSpeed);
