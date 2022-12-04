@@ -150,7 +150,8 @@ void gameAutonRight1(bool onRedSide){
 
 void skillsAdditionToGameAutonRight1(){
     gameAutonRight1(true);
-    turnLeft(190,degrees,15,velocityUnits::pct, true);
+    driveRight(4,inches);
+    turnLeft(175,degrees,15,velocityUnits::pct, true);
     wait(10,sec);
     //Fire Endgame
     for(int i = 0; i<5; i++){
