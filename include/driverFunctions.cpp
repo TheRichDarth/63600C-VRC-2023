@@ -15,6 +15,7 @@ void flywheelSpeedControl(){
   if(enableFlywheelSpeedControl){
     if(Controller2.ButtonUp.pressing() && !Controller2PressedLast){
       flywheelSpeed+=flywheelSpeedStep;
+      if(flywheelSpeed>12.0) flywheelSpeed = 12.0;
       Controller2PressedLast = true;
       Controller2.Screen.setCursor(4,1);
       Controller2.Screen.clearLine();
@@ -23,6 +24,7 @@ void flywheelSpeedControl(){
       Controller2.Screen.print(" Volts");
     }else if(Controller2.ButtonDown.pressing() && !Controller2PressedLast){
       flywheelSpeed-=flywheelSpeedStep;
+      if(flywheelSpeed<flywheelMinSpeed)flywheelSpeed = flywheelMinSpeed;
       Controller2PressedLast = true;
       Controller2.Screen.setCursor(4,1);
       Controller2.Screen.clearLine();
@@ -30,6 +32,14 @@ void flywheelSpeedControl(){
       Controller2.Screen.print(flywheelSpeed);
       Controller2.Screen.print(" Volts");
     }
+    // if((Controller2.ButtonDown.pressing() || Controller2.ButtonUp.pressing())&& !Controller2PressedLast){
+    //   Controller2.Screen.clearScreen();
+    //   Controller2.Screen.setCursor(4,1);
+    //   Controller2.Screen.clearLine();
+    //   Controller2.Screen.print("Flywheel: ");
+    //   Controller2.Screen.print(flywheelSpeed);
+    //   Controller2.Screen.print(" Volts");
+    // }
   }
 }
 /* runDriverRollerSpinning:
@@ -40,6 +50,7 @@ void flywheelSpeedControl(){
  * onRedSide: controls which side the code will score the roller for
  */
 void runDriverRollerSpinning(bool onRedSide, bool acceptGreenForBlue = true){
+  if(Controller1.ButtonR1.pressing() || Controller1.ButtonR2.pressing()) return;
     if(Controller1.ButtonX.pressing())autoRollerSpinning = false;
     // Roller Spinning (Nested Ifs galore)
     if(/*Controller1.ButtonX.pressing() &&*/ autoRollerSpinning){ //If roller button is being pressed
@@ -132,5 +143,14 @@ void xDrive(){
     frontRightMotor.spin(fwd, rfPower, velocityUnits::pct);
     backRightMotor.spin(fwd, rbPower, velocityUnits::pct);
 
+}
+
+void tankDrive(){
+  float leftPower = Controller1.Axis3.value();
+  float rightPower = Controller1.Axis1.value();
+
+  leftDrivetrain.spin(fwd,leftPower,velocityUnits::pct);
+  rightDrivetrain.spin(fwd,rightPower,velocityUnits::pct);
+  
 }
 

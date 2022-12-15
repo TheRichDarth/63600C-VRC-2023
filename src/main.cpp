@@ -25,6 +25,8 @@
 
 // "vex.h" library is necessary for all VEXcode programs
 #include "vex.h"
+//This includes all files from sylib. We haven't used this yet but plan to.
+#include "sylib/sylib.hpp"
 // "iostream" allows us to print to the terminal and use std::strings.
 #include "iostream"
 // "confic.cpp" has almost all configuration variables that we may want to adjust
@@ -35,15 +37,11 @@
 // "driverFunctions.cpp" contains all functions used in driving.
 #include "driverFunctions.cpp"
 
-//This includes all files from sylib. We haven't used this yet but plan to.
-#include "sylib/sylib.hpp"
-
 //This tells the code to default to interpreting all our code in the context of vex
 using namespace vex;
 
 // A global instance of competition
 competition Competition;
-
 
 
 /**
@@ -83,15 +81,15 @@ void pre_auton(void) {
  *
  */
 void autonomous(void) {
+  topOptical.setLightPower(80);
+  bottomOptical.setLightPower(80);
+  
   runAuton(autonSelect); // References "autonRoutines.cpp"
   //rollerSpinAuton(true);
   //Test123456
 }
-void doNothing(){
-}
-void alsoNothing(){
-
-}
+// void doNothing(){}
+// void alsoNothing(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
@@ -112,6 +110,13 @@ void usercontrol(void) {
   //timer endgameTimer;
   //endgameTimer.clear();
 
+  timer flywheelLogTimer;
+  flywheelLogTimer.clear();
+
+  
+
+  Controller2.Screen.clearScreen();
+  Brain.Screen.clearScreen();
   while (1) {
     driverStarted = true;
     //Controller2.Screen.clearScreen();
@@ -135,6 +140,7 @@ void usercontrol(void) {
     //Put Brain screen print code here to monitor values, etc.
     //Brain.Screen.printAt(20,20,"test1");;
     }
+    //Controller2.Screen.clearScreen();
 
     flywheelSpeedControl();  
     xDrive();
@@ -143,16 +149,24 @@ void usercontrol(void) {
       Brain.Screen.newLine();
       Brain.Screen.print("Ready Press = %d",readyPress);
     }
-    if((Controller1.ButtonX.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
+    if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
       enableFlywheel = !enableFlywheel;
       readyPress = readyPressDelay;
+      Controller2.Screen.setCursor(2,1);
+      Controller2.Screen.print("Flywheel: ");
+      if(enableFlywheel){
+        Controller2.Screen.print("On ");
+      }else{
+        Controller2.Screen.print("Off");
+      }
+      Controller2.rumble("-");
     }
 
-    if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing())&& readyPress<=0){
-      indexPneumatic.set(true);
-      flywheelDelay = indexTime;
-      readyPress = readyPressDelay;
-    }
+    // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
+    //   indexPneumatic.set(true);
+    //   flywheelDelay = indexTime;
+    //   readyPress = readyPressDelay;
+    // }
     
 
     // if(flywheelDelay<=0){
@@ -164,7 +178,7 @@ void usercontrol(void) {
     //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
     //If not pressed, then the cylinder is told to retract again.
   
-    if(Controller1.ButtonL1.pressing() || Controller2.ButtonL2.pressing()){
+    if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
       if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
     }
     
@@ -190,15 +204,41 @@ void usercontrol(void) {
     if(!displayImages){
       // Brain.Screen.newLine();
       // Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
+      
+      Brain.Screen.setCursor(6,1);
       Brain.Screen.newLine();
       Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("R: %d",redSwitch.value(rotationUnits::deg));
+
+      // Controller1.Screen.setCursor(4,1);
+      // Controller1.Screen.clearLine();
+      // Controller1.Screen.print("FlywheelDelay = %d",flywheelDelay);
       // Brain.Screen.newLine();
       // Brain.Screen.print("Top:%d",topOptical.hue());
       // Brain.Screen.newLine();
       // Brain.Screen.print("Bottom: %d",bottomOptical.hue());
-      std::cout << "flywheelDelay: ";
-      std::cout << flywheelDelay;
-      std::cout << "\n t3 ";
+
+      // std::cout << "flywheelDelay: ";
+      // std::cout << flywheelDelay;
+      // std::cout << "\n t3 ";
+
+      // std::cout << "Flywheel Vel: ";
+      // std::cout << flywheelMotors.velocity(rpm);
+      // std::cout << "\n";
+
+      //timer (ms), flywheel voltage flywheelVel, index state, sylib vel, 
+      std::cout << flywheelLogTimer.time(msec);
+      std::cout << ",";
+      std::cout << flywheelSpeed;
+      std::cout << ",";
+      std::cout << flywheelMotors.velocity(rpm);
+      std::cout << ",";
+      std::cout << indexPneumatic.value();
+      // std::cout << ",";
+      // std::cout << flywheelSyl.get_velocity();
+
+      std::cout << "\n";
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
@@ -221,8 +261,11 @@ void usercontrol(void) {
       endgame.set(false);
     }
 
-
-    runDriverRollerSpinning(true);
+    if(redSwitch.value(deg)<180){ // Red
+      runDriverRollerSpinning(true);
+    }else{ // Blue
+      runDriverRollerSpinning(false);
+    }
     
     // if(endgameTimer.time()>((60+35)*1000)){
     //   Controller1.Screen.setCursor(4,10);

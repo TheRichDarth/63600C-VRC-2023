@@ -21,11 +21,13 @@ double flywheelSpeed = 12;
 // flywheelSpeedStep is the number of steps the flywheelSpeed is adjusted by each time the button is pressed
 double flywheelSpeedStep = 0.5;
 
+double flywheelMinSpeed = 9.0;
+
 //readyPressDelay is the number of drive while() cycles between accepting single-press actions like launching a disc or pressing the brain screen.
 int readyPressDelay = 20;
 //indexTime is the number of drive while() cycles between contracting and extending the index pneumatic
 int indexTime = 10;
-int indexTimeBetweenDiscs = 50;
+int indexTimeBetweenDiscs = 40;
 
 
 

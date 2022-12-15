@@ -71,7 +71,7 @@ void driveRight(float distance, rotationUnits distanceUnits, float velocity, vel
   frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
   frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
   backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
+  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
 void driveRight(float distance,rotationUnits distanceUnits){
   driveRight(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
@@ -188,10 +188,10 @@ void driveLeft(float distance, float velocity, bool waitForCompletion = true){
 }
 
 void driveRight(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveFwd(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+  driveRight(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
 }
 void driveRight(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
-  driveFwd(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
+  driveRight(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
 }
 void driveRight(float distance, distanceUnits distUnits, bool waitForCompletion = true){
   driveRight(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
@@ -232,13 +232,13 @@ bool topRollerRed(){
   return topOptical.hue()<=40 || topOptical.hue()>340;
 }
 bool topRollerBlue(){
-  return topOptical.hue()<=250 && topOptical.hue()>=140;
+  return topOptical.hue()<=290 && topOptical.hue()>=125;
 }
 bool bottomRollerRed(){
   return bottomOptical.hue()<=40 || topOptical.hue()>340;
 }
 bool bottomRollerBlue(){
-  return bottomOptical.hue()<=250 && bottomOptical.hue()>=140;
+  return bottomOptical.hue()<=290 && bottomOptical.hue()>=125;
 }
 
 
@@ -259,7 +259,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     //int rollerVelocity = 90;
     vex::directionType preferredDirection = forward;
     const char * rumblePattern = ".";
-    rollerMotor.setStopping(brake);
+    rollerMotor.setStopping(coast);
     if(topRollerRed()){ //Red
       if(bottomRollerRed()){
         //R/R
@@ -305,18 +305,34 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     }
 }
 void rollerSpin(bool onRedSide){
-  rollerSpin(onRedSide,90);
+  rollerSpin(onRedSide,45);
 }
 
 void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue = true){
   timer rollerSpinTimer;
     rollerSpinTimer.clear();
-    float rollerSpinTime = 2.5; //Units: seconds
+    //float rollerSpinTime = 2.5; //Units: seconds
     while(rollerSpinTimer<timeDelay){
         if((topRollerRed() || topRollerBlue()) && (bottomRollerRed() || bottomRollerBlue())){ //Automatic Roller Spinning Only works if both sensors have a color
             rollerSpin(onRedSide);
         }else{
-            Controller1.rumble("-----");
+          if(onRedSide){
+            if(topRollerRed()){
+              Controller1.rumble("- .");
+            }else if(topRollerBlue()){
+              rollerMotor.spin(fwd,60,velocityUnits::pct);
+            }else{
+              Controller1.rumble("...");
+            }
+          }else{
+            if(topRollerBlue()){
+              Controller1.rumble("- .");
+            }else if(topRollerRed()){
+              rollerMotor.spin(fwd,60,velocityUnits::pct);
+            }else{
+              Controller1.rumble("...");
+            }
+          }
         }
     }
 }
@@ -387,8 +403,8 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "6.BLUE-RightGame",
     "7.Skills-rgEX",
 
-    "8.Xyz",
-    "9.Xyz",
+    "8.RED-LeftGame",
+    "9.BLU-LeftGame",
     "10.Xyz",
     "11.Xyz"
 };
@@ -415,12 +431,12 @@ const color routineColors[numAutonRoutines] = {
     color(80, 69, 232),
 
     color(161,69,232),
-    color(232,69,221),
-    color(232,69,140),
-    color(80,69,232),
+    color(232,80,69),
+    color(80, 69, 232),
+    color(80,232,69),
 
-    color(252,244,52),
-    color(255,255,255),
+    color(252,80,80),
+    color(80,69,232),
     color(156,89,209),
     color(44,44,44) 
 };
