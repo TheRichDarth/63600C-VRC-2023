@@ -142,25 +142,27 @@ void usercontrol(void) {
     }
     //Controller2.Screen.clearScreen();
 
-    flywheelSpeedControl();  
-    xDrive();
+    //flywheelSpeedControl();  
+    //xDrive();
+    tankDrive();
+
 
     if(!displayImages){
       Brain.Screen.newLine();
       Brain.Screen.print("Ready Press = %d",readyPress);
     }
-    if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
-      enableFlywheel = !enableFlywheel;
-      readyPress = readyPressDelay;
-      Controller2.Screen.setCursor(2,1);
-      Controller2.Screen.print("Flywheel: ");
-      if(enableFlywheel){
-        Controller2.Screen.print("On ");
-      }else{
-        Controller2.Screen.print("Off");
-      }
-      Controller2.rumble("-");
-    }
+    // if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
+    //   enableFlywheel = !enableFlywheel;
+    //   readyPress = readyPressDelay;
+    //   Controller2.Screen.setCursor(2,1);
+    //   Controller2.Screen.print("Flywheel: ");
+    //   if(enableFlywheel){
+    //     Controller2.Screen.print("On ");
+    //   }else{
+    //     Controller2.Screen.print("Off");
+    //   }
+    //   Controller2.rumble("-");
+    // }
 
     // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
     //   indexPneumatic.set(true);
@@ -178,28 +180,23 @@ void usercontrol(void) {
     //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
     //If not pressed, then the cylinder is told to retract again.
   
-    if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
-      if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
-    }
+    // if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
+    //   if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
+    // }
     
-    if(flywheelDelay>0) indexPneumatic.set(true);
-    else indexPneumatic.set(false);
+    // if(flywheelDelay>0) indexPneumatic.set(true);
+    // else indexPneumatic.set(false);
     
     readyPress--;
-    flywheelDelay--;
+    //flywheelDelay--;
     
 
 
     // if(enableFlywheel) {
-    //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
+    //   flywheelMotors.spin(fwd,flywheelSpeed,volt);
     // } else{
-    //   flywheelMotors.stop(coast); 
+    //   flywheelMotors.stop(coast);
     // }
-    if(enableFlywheel) {
-      flywheelMotors.spin(fwd,flywheelSpeed,volt);
-    } else{
-      flywheelMotors.stop(coast);
-    }
     
     if(!displayImages){
       // Brain.Screen.newLine();

@@ -2,7 +2,7 @@
 #include "vex.h"
 #include "iostream"
 
-bool displayImages = false;
+bool displayImages = true;
 const int imageCount = 10; //Number of elements in names[] 
 const std::string names[imageCount] = {"Cjuly.png", "WAY.png", "hal.png", "PIKA.png", "wheel.png", "corespace.png", "drow.png", "spaghetti.png", "cartridge.png"};
 bool autoRollerSpinning = true;
