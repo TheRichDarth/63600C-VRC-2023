@@ -145,3 +145,12 @@ void xDrive(){
 
 }
 
+void tankDrive(){
+  float leftPower = Controller1.Axis3.value();
+  float rightPower = Controller1.Axis1.value();
+
+  leftDrivetrain.spin(fwd,leftPower,velocityUnits::pct);
+  rightDrivetrain.spin(fwd,rightPower,velocityUnits::pct);
+  
+}
+

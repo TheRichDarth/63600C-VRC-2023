@@ -29,6 +29,21 @@ distance leftDistance = distance(PORT3);
 
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
 digital_out endgame = digital_out(Brain.ThreeWirePort.B);
+
+motor leftDrivetrainA = motor(PORT1,ratio6_1,false);
+motor leftDrivetrainB = motor(PORT2,ratio6_1,false);
+motor leftDrivetrainC = motor(PORT3,ratio6_1, true);
+motor_group leftDrivetrain = motor_group(leftDrivetrainA,leftDrivetrainB,leftDrivetrainC);
+
+motor rightDrivetrainA = motor(PORT1,ratio6_1,false);
+motor rightDrivetrainB = motor(PORT2,ratio6_1,false);
+motor rightDrivetrainC = motor(PORT3,ratio6_1, true);
+motor_group rightDrivetrain = motor_group(rightDrivetrainA,rightDrivetrainB,rightDrivetrainC);
+
+
+
+
+
 /*vex-vision-config:begin*/
 //vision visionAim = vision (PORT14, 50);
 /*vex-vision-config:end*/

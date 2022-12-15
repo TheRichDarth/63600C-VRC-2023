@@ -29,6 +29,9 @@ extern controller Controller2;
 extern pot redSwitch;
 extern distance leftDistance;
 
+extern motor_group leftDrivetrain;
+extern motor_group rightDrivetrain;
+
 //sylib::Motor flywheelSyl;
 
 /**
