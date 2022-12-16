@@ -88,7 +88,7 @@ void autonomous(void) {
   //rollerSpinAuton(true);
   //Test123456
 }
-// void doNothing(){}
+void doNothing(){}
 // void alsoNothing(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
@@ -250,7 +250,7 @@ void usercontrol(void) {
       }
     }
 
-
+    
     //Actuates the cylinder controlling the endgame release
     if(Controller1.ButtonL2.pressing() && !Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing() && Controller1.ButtonB.pressing()){
       endgame.set(true);

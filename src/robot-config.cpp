@@ -30,9 +30,9 @@ distance leftDistance = distance(PORT3);
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
 digital_out endgame = digital_out(Brain.ThreeWirePort.B);
 
-motor leftDrivetrainA = motor(PORT1,ratio6_1,false);
-motor leftDrivetrainB = motor(PORT2,ratio6_1,false);
-motor leftDrivetrainC = motor(PORT3,ratio6_1, true);
+motor leftDrivetrainA = motor(PORT4,ratio6_1,true);
+motor leftDrivetrainB = motor(PORT5,ratio6_1,true);
+motor leftDrivetrainC = motor(PORT6,ratio6_1, false);
 motor_group leftDrivetrain = motor_group(leftDrivetrainA,leftDrivetrainB,leftDrivetrainC);
 
 motor rightDrivetrainA = motor(PORT1,ratio6_1,false);
