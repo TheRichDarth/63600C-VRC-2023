@@ -239,10 +239,10 @@ void usercontrol(void) {
     }
     if(Controller1.ButtonR1.pressing()){
       intakeMotors.spin(forward,100,pct);
-      rollerMotor.spin(reverse);
+      rollerMotor.spin(reverse, 100,pct);
     }else if(Controller1.ButtonR2.pressing()){
       intakeMotors.spin(reverse,60,pct);
-      rollerMotor.spin(forward);
+      rollerMotor.spin(forward, 100,pct);
     }else{
       intakeMotors.stop(coast);
       if(!Controller1.ButtonX.pressing()){
@@ -258,11 +258,11 @@ void usercontrol(void) {
       endgame.set(false);
     }
 
-    if(redSwitch.value(deg)<180){ // Red
-      runDriverRollerSpinning(true);
-    }else{ // Blue
-      runDriverRollerSpinning(false);
-    }
+    // if(redSwitch.value(deg)<180){ // Red
+    //   runDriverRollerSpinning(true);
+    // }else{ // Blue
+    //   runDriverRollerSpinning(false);
+    // }
     
     // if(endgameTimer.time()>((60+35)*1000)){
     //   Controller1.Screen.setCursor(4,10);

@@ -19,7 +19,7 @@ motor_group flywheelMotors = motor_group(flywheelMotorsMotorA, flywheelMotorsMot
 digital_out indexPneumatic = digital_out(Brain.ThreeWirePort.H);
 optical bottomOptical = optical(PORT2);
 optical topOptical = optical(PORT1);
-motor rollerMotor = motor(PORT12, ratio18_1, true);
+motor rollerMotor = motor(PORT7, ratio18_1, true);
 motor intakeMotorsMotorA = motor(PORT10, ratio6_1, true);
 motor intakeMotorsMotorB = motor(PORT13, ratio6_1, false);
 motor_group intakeMotors = motor_group(intakeMotorsMotorA, intakeMotorsMotorB);
@@ -30,14 +30,14 @@ distance leftDistance = distance(PORT3);
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
 digital_out endgame = digital_out(Brain.ThreeWirePort.B);
 
-motor leftDrivetrainA = motor(PORT4,ratio6_1,true);
-motor leftDrivetrainB = motor(PORT5,ratio6_1,true);
-motor leftDrivetrainC = motor(PORT6,ratio6_1, false);
+motor leftDrivetrainA = motor(PORT1,ratio6_1,true);
+motor leftDrivetrainB = motor(PORT2,ratio6_1,true);
+motor leftDrivetrainC = motor(PORT3,ratio6_1, false);
 motor_group leftDrivetrain = motor_group(leftDrivetrainA,leftDrivetrainB,leftDrivetrainC);
 
-motor rightDrivetrainA = motor(PORT1,ratio6_1,false);
-motor rightDrivetrainB = motor(PORT2,ratio6_1,false);
-motor rightDrivetrainC = motor(PORT3,ratio6_1, true);
+motor rightDrivetrainA = motor(PORT4,ratio6_1,false);
+motor rightDrivetrainB = motor(PORT5,ratio6_1,false);
+motor rightDrivetrainC = motor(PORT6,ratio6_1, true);
 motor_group rightDrivetrain = motor_group(rightDrivetrainA,rightDrivetrainB,rightDrivetrainC);
 
 
