@@ -40,6 +40,9 @@ motor rightDrivetrainB = motor(PORT5,ratio6_1,false);
 motor rightDrivetrainC = motor(PORT6,ratio6_1, true);
 motor_group rightDrivetrain = motor_group(rightDrivetrainA,rightDrivetrainB,rightDrivetrainC);
 
+motor catapultMotor = motor(PORT19,ratio36_1,true);
+triport threeWireExpander = triport(PORT14);
+limit catapultLimitSwitch = limit(threeWireExpander.B);
 
 
 

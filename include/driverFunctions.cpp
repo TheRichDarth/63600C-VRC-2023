@@ -154,3 +154,64 @@ void tankDrive(){
   
 }
 
+/**
+ * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
+ * 
+ * @param fireButton boolean input for whether the fire button is pressed
+ */
+void updateCatapult(bool fireButton){
+  catapultStateElapsedTime++;
+  switch (catapultDriverState){
+  case 0:
+    catapultMotor.stop(brake);
+    //Catapult is raised after firing. Waiting for enough time to pass before automatically lowering if appropriate
+    if(catapultStateElapsedTime>catapultLoweringDelay){
+      //If enough time has elapsed after firing check if catapult should be lowered.
+      if(catapultAutoLowering || fireButton){
+        //Lower the catapult
+        catapultDriverState = 1;
+        catapultStateElapsedTime = 0;
+      }
+    }
+    break;
+  case 1:
+    //Lowering catapult into intake-position. Lowering is stopped when limit switch is pressed
+    catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    if(catapultLimitSwitch.pressing()){
+      //The catapult has reached it's rest position and the motor needs to stop moving.
+      catapultMotor.stop(hold);
+      catapultDriverState = 2;
+      catapultStateElapsedTime = 0;
+    }else if(catapultStateElapsedTime>50*7){
+      //Catapult has been trying to lower for 7 seconds and has not progressed. An error must have occurred
+      Controller1.rumble("---...---...");
+      Controller1.Screen.setCursor(3,0);
+      Controller1.Screen.print("Cata Lower Failed");
+      catapultDriverState = 0;
+      catapultStateElapsedTime = 0;
+    }
+    break;
+  case 2:
+    //Catapult is in ready-to-fire position and awaiting the fire button.
+    catapultMotor.stop(hold);
+    if(fireButton){
+      //Fire the catapult
+      catapultDriverState = 3;
+      catapultStateElapsedTime = 0;
+    }
+    break;
+  case 3:
+    //Catapult is in the process of moving downward to fire
+    catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    if(!catapultLimitSwitch.pressing()){
+      //Catapult has fired and the motor should stop.
+      catapultMotor.stop(brake);
+      catapultDriverState = 0;
+      catapultStateElapsedTime = 0;
+    }
+    break;
+
+  default:
+    break;
+  }
+}

@@ -31,6 +31,9 @@ extern distance leftDistance;
 
 extern motor_group leftDrivetrain;
 extern motor_group rightDrivetrain;
+extern motor catapultMotor;
+extern triport threeWireExpander;
+extern limit catapultLimitSwitch;
 
 //sylib::Motor flywheelSyl;
 
