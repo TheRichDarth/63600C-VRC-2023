@@ -56,7 +56,8 @@ bool driverStarted = false;
 int catapultDriverState = 0;
 
 bool catapultAutoLowering = true;
-const int catapultLoweringDelay = 10;
 
-int catapultStateElapsedTime = catapultLoweringDelay;
-const int catapultVelocity = 60; // PCT
+timer catapultTimer;
+const int catapultVelocity = 50; // PCT
+const int catapultLowerMaxTime =7000;
+const int catapultFireMaxTime = 2000;

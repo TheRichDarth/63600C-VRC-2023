@@ -88,8 +88,8 @@ void autonomous(void) {
   //rollerSpinAuton(true);
   //Test123456
 }
-void doNothing(){}
-// void alsoNothing(){}
+// void doNothing(){}
+void alsoNothing(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
@@ -145,6 +145,7 @@ void usercontrol(void) {
     //flywheelSpeedControl();  
     //xDrive();
     tankDrive();
+    updateCatapult(Controller1.ButtonL1.pressing());
 
 
     if(!displayImages){
@@ -238,10 +239,10 @@ void usercontrol(void) {
       std::cout << "\n";
     }
     if(Controller1.ButtonR1.pressing()){
-      intakeMotors.spin(forward,100,pct);
+      //intakeMotors.spin(forward,100,pct);
       rollerMotor.spin(reverse, 100,pct);
     }else if(Controller1.ButtonR2.pressing()){
-      intakeMotors.spin(reverse,60,pct);
+      //intakeMotors.spin(reverse,60,pct);
       rollerMotor.spin(forward, 100,pct);
     }else{
       intakeMotors.stop(coast);
@@ -258,7 +259,7 @@ void usercontrol(void) {
       endgame.set(false);
     }
 
-    // if(redSwitch.value(deg)<180){ // Red
+    // if(redSwitch.value(deg)<180){ // Red  
     //   runDriverRollerSpinning(true);
     // }else{ // Blue
     //   runDriverRollerSpinning(false);

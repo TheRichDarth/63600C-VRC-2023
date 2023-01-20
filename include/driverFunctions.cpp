@@ -160,17 +160,31 @@ void tankDrive(){
  * @param fireButton boolean input for whether the fire button is pressed
  */
 void updateCatapult(bool fireButton){
-  catapultStateElapsedTime++;
+
+  std::cout << "\n"/*updateCatapult run. State: "*/;
+  std::cout << catapultDriverState;
+  std::cout << ", Limit value: ";
+  //std::cout << catapultLimitSwitch;
+  std::cout << catapultLimitSwitch.pressing();
+  std::cout << ", Timer: ";
+  std::cout << catapultTimer.time(msec);
+
+  if(Controller2.ButtonX.pressing()){
+
+
+    return;
+  }
+
   switch (catapultDriverState){
   case 0:
     catapultMotor.stop(brake);
     //Catapult is raised after firing. Waiting for enough time to pass before automatically lowering if appropriate
-    if(catapultStateElapsedTime>catapultLoweringDelay){
+    if(catapultTimer.time(sec)>1){
       //If enough time has elapsed after firing check if catapult should be lowered.
       if(catapultAutoLowering || fireButton){
         //Lower the catapult
         catapultDriverState = 1;
-        catapultStateElapsedTime = 0;
+        catapultTimer.clear();
       }
     }
     break;
@@ -181,14 +195,16 @@ void updateCatapult(bool fireButton){
       //The catapult has reached it's rest position and the motor needs to stop moving.
       catapultMotor.stop(hold);
       catapultDriverState = 2;
-      catapultStateElapsedTime = 0;
-    }else if(catapultStateElapsedTime>50*7){
+      catapultTimer.clear();
+    }else if(catapultTimer.time(msec)>catapultLowerMaxTime){
       //Catapult has been trying to lower for 7 seconds and has not progressed. An error must have occurred
       Controller1.rumble("---...---...");
       Controller1.Screen.setCursor(3,0);
       Controller1.Screen.print("Cata Lower Failed");
+      std::cout << "Cata Main Lower Failed";
+      catapultMotor.stop(coast);
       catapultDriverState = 0;
-      catapultStateElapsedTime = 0;
+      catapultTimer.clear();
     }
     break;
   case 2:
@@ -197,7 +213,7 @@ void updateCatapult(bool fireButton){
     if(fireButton){
       //Fire the catapult
       catapultDriverState = 3;
-      catapultStateElapsedTime = 0;
+      catapultTimer.clear();
     }
     break;
   case 3:
@@ -207,11 +223,50 @@ void updateCatapult(bool fireButton){
       //Catapult has fired and the motor should stop.
       catapultMotor.stop(brake);
       catapultDriverState = 0;
-      catapultStateElapsedTime = 0;
+      catapultTimer.clear();
+    }
+    if(catapultTimer.time(msec)>catapultFireMaxTime){
+      //Catapult firing failed.
+      Controller1.rumble("-.-.");
+      std::cout << "Cata Main Lower Failed";
+
     }
     break;
 
   default:
     break;
   }
+
+  //Manual Partner control:
+  if(Controller2.ButtonA.pressing()){
+    //Catapult Manual Control 1
+    /**
+     * In this mode, the partner controller can manually set the catapult to each state and it will automatically run as normal.
+     * 
+     */
+    Controller2.Screen.clearScreen();
+    Controller2.Screen.setCursor(0,0);
+    Controller2.Screen.print("Mode Control; Mode: ");
+    Controller2.Screen.print(catapultDriverState);
+    switch (catapultDriverState)
+    {
+    case 0:
+      Controller2.Screen.print("Waiting");
+      break;
+    case 1:
+      
+      break;
+    default:
+      break;
+    }
+    // Controller2.Screen.
+    if(Controller2.ButtonUp.pressing() && !Controller2PressedLast){
+      //Toggle auto-lowering
+      catapultAutoLowering = true;
+      Controller2PressedLast = true;
+    }else if(Controller2.ButtonLeft.pressing()){
+
+    }
+  }
+
 }
