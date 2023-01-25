@@ -16,22 +16,33 @@ void pushPreloads(){
  * 90% success rate
  * Parameters: bool onRedSide: which side the roller is scored for
  */
-void rollerSpinAuton(bool onRedSide){
+//DEPRECATED DO NOT USE
+// void rollerSpinAuton(bool onRedSide){
     
-  topOptical.setLightPower(90,pct);
-  bottomOptical.setLightPower(90,pct);
-  
-
-  driveTimeout(3,sec);
-  driveFwd(0.5,rev,30,velocityUnits::pct, true);
-  Controller1.rumble("...");
-  for(int i = 0; i<15*1000/20;i++){
-    if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
-      rollerSpin(onRedSide);
-    }
-    wait(20,msec);
-  }
+//   topOptical.setLightPower(90,pct);
+//   bottomOptical.setLightPower(90,pct);
+//   driveTimeout(3,sec);
+//   driveFwd(0.5,rev,30,velocityUnits::pct, true);
+//   Controller1.rumble("...");
+//   for(int i = 0; i<15*1000/20;i++){
+//     if((topOptical.color()==red || topOptical.color()==blue) && (bottomOptical.color()==red || bottomOptical.color()==blue)){ //Automatic Roller Spinning Only works if both sensors have a color
+//       rollerSpin(onRedSide);
+//     }
+//     wait(20,msec);
+//   }
+// }
+void roller2(bool onRedSide = true){
+    // driveFwd(1,rotationUnits::rev,30,velocityUnits::pct, true);
+    rightDrivetrain.setTimeout(10,sec);
+    rightDrivetrain.spinFor(300,rotationUnits::deg,100,velocityUnits::pct, false);
+    wait(1,sec);
+    //90 degrees times 3.25/
+    rollerMotor.spinFor(forward, 2*87.75,rotationUnits::deg,80,velocityUnits::pct);
 }
+void rollerSpinAuton(bool t){
+
+}
+
 /* DEPRECATED: DO NOT USE
  * Old skills auton from before we moved the roller. This will not work. 
  */
@@ -252,9 +263,9 @@ void five_right_game(bool onRedSide){
 /* Game Auton Routines
  * 0: Do Nothing
  * 1: Push preloads into low goal
- * 2: Spin Roller to RED (Can be used in Skills)
+ * 2: Spin Roller to US (Can be used in Skills)
  *      -Starts on Left Side
- * 3: Spin Roller to BLUE
+ * 3: Spin Roller to US
  *      -Starts on Right Side
  * 
  * Skills Routines:
@@ -271,10 +282,10 @@ void runAuton(int autonSelect){
         pushPreloads();
         break;
     case 2:
-        rollerSpin(true);
+        roller2();
         break;
     case 3:
-        rollerSpin(false);
+        roller2();
         break;
     case 4:
         skillsAuton2();

@@ -169,11 +169,6 @@ void updateCatapult(bool fireButton){
   std::cout << ", Timer: ";
   std::cout << catapultTimer.time(msec);
 
-  if(Controller2.ButtonX.pressing()){
-
-
-    return;
-  }
 
   switch (catapultDriverState){
   case 0:
@@ -193,7 +188,7 @@ void updateCatapult(bool fireButton){
     catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
     if(catapultLimitSwitch.pressing()){
       //The catapult has reached it's rest position and the motor needs to stop moving.
-      catapultMotor.stop(hold);
+      catapultMotor.stop(brake);
       catapultDriverState = 2;
       catapultTimer.clear();
     }else if(catapultTimer.time(msec)>catapultLowerMaxTime){
@@ -209,7 +204,7 @@ void updateCatapult(bool fireButton){
     break;
   case 2:
     //Catapult is in ready-to-fire position and awaiting the fire button.
-    catapultMotor.stop(hold);
+    catapultMotor.stop(brake);
     if(fireButton){
       //Fire the catapult
       catapultDriverState = 3;
@@ -221,7 +216,7 @@ void updateCatapult(bool fireButton){
     catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
     if(!catapultLimitSwitch.pressing()){
       //Catapult has fired and the motor should stop.
-      catapultMotor.stop(brake);
+      catapultMotor.stop(coast);
       catapultDriverState = 0;
       catapultTimer.clear();
     }
@@ -246,26 +241,36 @@ void updateCatapult(bool fireButton){
      */
     Controller2.Screen.clearScreen();
     Controller2.Screen.setCursor(0,0);
-    Controller2.Screen.print("Mode Control; Mode: ");
+    Controller2.Screen.print("Mode:");
     Controller2.Screen.print(catapultDriverState);
-    switch (catapultDriverState)
-    {
-    case 0:
-      Controller2.Screen.print("Waiting");
-      break;
-    case 1:
-      
-      break;
-    default:
-      break;
-    }
+    Controller2.Screen.print(" (D Resets)");
+    Controller2.Screen.newLine();
+    Controller2.Screen.print("(L-/R+) Vel: ");
+    Controller2.Screen.print(catapultVelocity);
+    Controller2.Screen.newLine();
+    Controller2.Screen.print("(U) Auto: ");
+    Controller2.Screen.print(catapultAutoLowering);
     // Controller2.Screen.
     if(Controller2.ButtonUp.pressing() && !Controller2PressedLast){
       //Toggle auto-lowering
-      catapultAutoLowering = true;
+      catapultAutoLowering = !catapultAutoLowering;
       Controller2PressedLast = true;
-    }else if(Controller2.ButtonLeft.pressing()){
-
+    }else if(Controller2.ButtonLeft.pressing() && !Controller2PressedLast){
+      //Decrease speed
+      catapultVelocity -=10;
+      Controller2PressedLast = true;
+    }else if(Controller2.ButtonRight.pressing() && !Controller2PressedLast){
+      //Increase speed
+      catapultVelocity +=10;
+      Controller2PressedLast = true;
+    }else if(Controller2.ButtonDown.pressing() && !Controller2PressedLast){
+    catapultDriverState = 0;
+    catapultMotor.stop(coast);
+    Controller2PressedLast = true;
+    }else if(Controller2.ButtonY.pressing()){
+      catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }else{
+      Controller2PressedLast = false;
     }
   }
 

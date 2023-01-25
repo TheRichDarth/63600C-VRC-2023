@@ -203,9 +203,9 @@ void usercontrol(void) {
       // Brain.Screen.newLine();
       // Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
       
-      Brain.Screen.setCursor(6,1);
-      Brain.Screen.newLine();
-      Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
+      // Brain.Screen.setCursor(6,1);
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
       // Brain.Screen.newLine();
       // Brain.Screen.print("R: %d",redSwitch.value(rotationUnits::deg));
 

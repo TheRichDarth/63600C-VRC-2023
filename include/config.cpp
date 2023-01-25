@@ -55,9 +55,9 @@ bool driverStarted = false;
  */
 int catapultDriverState = 0;
 
-bool catapultAutoLowering = true;
+bool catapultAutoLowering = false;
 
 timer catapultTimer;
-const int catapultVelocity = 50; // PCT
+int catapultVelocity = 50; // PCT
 const int catapultLowerMaxTime =7000;
 const int catapultFireMaxTime = 2000;
