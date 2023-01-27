@@ -147,10 +147,131 @@ void xDrive(){
 
 void tankDrive(){
   float leftPower = Controller1.Axis3.value();
-  float rightPower = Controller1.Axis1.value();
+  float rightPower = Controller1.Axis2.value();
 
   leftDrivetrain.spin(fwd,leftPower,velocityUnits::pct);
   rightDrivetrain.spin(fwd,rightPower,velocityUnits::pct);
   
 }
 
+/**
+ * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
+ * 
+ * @param fireButton boolean input for whether the fire button is pressed
+ */
+void updateCatapult(bool fireButton){
+
+  std::cout << "\n"/*updateCatapult run. State: "*/;
+  std::cout << catapultDriverState;
+  std::cout << ", Limit value: ";
+  //std::cout << catapultLimitSwitch;
+  std::cout << catapultLimitSwitch.pressing();
+  std::cout << ", Timer: ";
+  std::cout << catapultTimer.time(msec);
+
+
+  switch (catapultDriverState){
+  case 0:
+    catapultMotor.stop(brake);
+    //Catapult is raised after firing. Waiting for enough time to pass before automatically lowering if appropriate
+    if(catapultTimer.time(sec)>1){
+      //If enough time has elapsed after firing check if catapult should be lowered.
+      if(catapultAutoLowering || fireButton){
+        //Lower the catapult
+        catapultDriverState = 1;
+        catapultTimer.clear();
+      }
+    }
+    break;
+  case 1:
+    //Lowering catapult into intake-position. Lowering is stopped when limit switch is pressed
+    catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    if(catapultLimitSwitch.pressing()){
+      //The catapult has reached it's rest position and the motor needs to stop moving.
+      catapultMotor.stop(brake);
+      catapultDriverState = 2;
+      catapultTimer.clear();
+    }else if(catapultTimer.time(msec)>catapultLowerMaxTime){
+      //Catapult has been trying to lower for 7 seconds and has not progressed. An error must have occurred
+      Controller1.rumble("---...---...");
+      Controller1.Screen.setCursor(3,0);
+      Controller1.Screen.print("Cata Lower Failed");
+      std::cout << "Cata Main Lower Failed";
+      catapultMotor.stop(coast);
+      catapultDriverState = 0;
+      catapultTimer.clear();
+    }
+    break;
+  case 2:
+    //Catapult is in ready-to-fire position and awaiting the fire button.
+    catapultMotor.stop(brake);
+    if(fireButton){
+      //Fire the catapult
+      catapultDriverState = 3;
+      catapultTimer.clear();
+    }
+    break;
+  case 3:
+    //Catapult is in the process of moving downward to fire
+    catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    if(!catapultLimitSwitch.pressing()){
+      //Catapult has fired and the motor should stop.
+      catapultMotor.stop(coast);
+      catapultDriverState = 0;
+      catapultTimer.clear();
+    }
+    if(catapultTimer.time(msec)>catapultFireMaxTime){
+      //Catapult firing failed.
+      Controller1.rumble("-.-.");
+      std::cout << "Cata Main Lower Failed";
+
+    }
+    break;
+
+  default:
+    break;
+  }
+
+  //Manual Partner control:
+  if(Controller2.ButtonA.pressing()){
+    //Catapult Manual Control 1
+    /**
+     * In this mode, the partner controller can manually set the catapult to each state and it will automatically run as normal.
+     * 
+     */
+    Controller2.Screen.clearScreen();
+    Controller2.Screen.setCursor(0,0);
+    Controller2.Screen.print("Mode:");
+    Controller2.Screen.print(catapultDriverState);
+    Controller2.Screen.print(" (D Resets)");
+    Controller2.Screen.newLine();
+    Controller2.Screen.print("(L-/R+) Vel: ");
+    Controller2.Screen.print(catapultVelocity);
+    Controller2.Screen.newLine();
+    Controller2.Screen.print("(U) Auto: ");
+    Controller2.Screen.print(catapultAutoLowering);
+    // Controller2.Screen.
+    if(Controller2.ButtonUp.pressing() && !Controller2PressedLast){
+      //Toggle auto-lowering
+      catapultAutoLowering = !catapultAutoLowering;
+      Controller2PressedLast = true;
+    }else if(Controller2.ButtonLeft.pressing() && !Controller2PressedLast){
+      //Decrease speed
+      catapultVelocity -=10;
+      Controller2PressedLast = true;
+    }else if(Controller2.ButtonRight.pressing() && !Controller2PressedLast){
+      //Increase speed
+      catapultVelocity +=10;
+      Controller2PressedLast = true;
+    }else if(Controller2.ButtonDown.pressing() && !Controller2PressedLast){
+    catapultDriverState = 0;
+    catapultMotor.stop(coast);
+    Controller2PressedLast = true;
+    }else if(Controller2.ButtonY.pressing()){
+      catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }else{
+      Controller2PressedLast = false;
+    }
+  }
+
+}

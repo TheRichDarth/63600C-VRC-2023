@@ -19,7 +19,7 @@ motor_group flywheelMotors = motor_group(flywheelMotorsMotorA, flywheelMotorsMot
 digital_out indexPneumatic = digital_out(Brain.ThreeWirePort.H);
 optical bottomOptical = optical(PORT2);
 optical topOptical = optical(PORT1);
-motor rollerMotor = motor(PORT12, ratio18_1, true);
+motor rollerMotor = motor(PORT5, ratio18_1, false);
 motor intakeMotorsMotorA = motor(PORT10, ratio6_1, true);
 motor intakeMotorsMotorB = motor(PORT13, ratio6_1, false);
 motor_group intakeMotors = motor_group(intakeMotorsMotorA, intakeMotorsMotorB);
@@ -30,16 +30,19 @@ distance leftDistance = distance(PORT3);
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
 digital_out endgame = digital_out(Brain.ThreeWirePort.B);
 
-motor leftDrivetrainA = motor(PORT1,ratio6_1,false);
-motor leftDrivetrainB = motor(PORT2,ratio6_1,false);
-motor leftDrivetrainC = motor(PORT3,ratio6_1, true);
+motor leftDrivetrainA = motor(PORT10,ratio6_1,true);
+motor leftDrivetrainB = motor(PORT9,ratio6_1,true);
+motor leftDrivetrainC = motor(PORT8,ratio6_1, false);
 motor_group leftDrivetrain = motor_group(leftDrivetrainA,leftDrivetrainB,leftDrivetrainC);
 
 motor rightDrivetrainA = motor(PORT1,ratio6_1,false);
-motor rightDrivetrainB = motor(PORT2,ratio6_1,false);
-motor rightDrivetrainC = motor(PORT3,ratio6_1, true);
+motor rightDrivetrainB = motor(PORT3,ratio6_1,false);
+motor rightDrivetrainC = motor(PORT2,ratio6_1, true);
 motor_group rightDrivetrain = motor_group(rightDrivetrainA,rightDrivetrainB,rightDrivetrainC);
 
+motor catapultMotor = motor(PORT4,ratio36_1,true);
+triport TWexpander = triport(PORT6);
+limit catapultLimitSwitch = limit(/*TWexpander.G*/Brain.ThreeWirePort.A);
 
 
 

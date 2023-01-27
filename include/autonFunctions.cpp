@@ -31,10 +31,8 @@ const float wheelDistance = 7.5; // Distance between centers of each wheel and t
 const float driveFactor = wheelCircumference*drivetrainRatio*drivetrainGearRatio;
 
 void driveFwd(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
+  leftDrivetrain.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,false);
+  rightDrivetrain.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
 void driveFwd(float distance,rotationUnits distanceUnits){
   driveFwd(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
@@ -44,10 +42,8 @@ void driveFwd(float distance){
 }
 
 void driveRev(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
+  leftDrivetrain.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,false);
+  rightDrivetrain.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
 void driveRev(float distance,rotationUnits distanceUnits){
   driveRev(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);

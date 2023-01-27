@@ -89,7 +89,7 @@ void autonomous(void) {
   //Test123456
 }
 // void doNothing(){}
-// void alsoNothing(){}
+void alsoNothing(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
@@ -142,25 +142,28 @@ void usercontrol(void) {
     }
     //Controller2.Screen.clearScreen();
 
-    flywheelSpeedControl();  
-    xDrive();
+    //flywheelSpeedControl();  
+    //xDrive();
+    tankDrive();
+    updateCatapult(Controller1.ButtonL1.pressing());
+
 
     if(!displayImages){
       Brain.Screen.newLine();
       Brain.Screen.print("Ready Press = %d",readyPress);
     }
-    if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
-      enableFlywheel = !enableFlywheel;
-      readyPress = readyPressDelay;
-      Controller2.Screen.setCursor(2,1);
-      Controller2.Screen.print("Flywheel: ");
-      if(enableFlywheel){
-        Controller2.Screen.print("On ");
-      }else{
-        Controller2.Screen.print("Off");
-      }
-      Controller2.rumble("-");
-    }
+    // if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
+    //   enableFlywheel = !enableFlywheel;
+    //   readyPress = readyPressDelay;
+    //   Controller2.Screen.setCursor(2,1);
+    //   Controller2.Screen.print("Flywheel: ");
+    //   if(enableFlywheel){
+    //     Controller2.Screen.print("On ");
+    //   }else{
+    //     Controller2.Screen.print("Off");
+    //   }
+    //   Controller2.rumble("-");
+    // }
 
     // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
     //   indexPneumatic.set(true);
@@ -178,36 +181,31 @@ void usercontrol(void) {
     //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
     //If not pressed, then the cylinder is told to retract again.
   
-    if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
-      if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
-    }
+    // if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
+    //   if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
+    // }
     
-    if(flywheelDelay>0) indexPneumatic.set(true);
-    else indexPneumatic.set(false);
+    // if(flywheelDelay>0) indexPneumatic.set(true);
+    // else indexPneumatic.set(false);
     
     readyPress--;
-    flywheelDelay--;
+    //flywheelDelay--;
     
 
 
     // if(enableFlywheel) {
-    //   flywheelMotors.spin(fwd,flywheelSpeed,pct);
+    //   flywheelMotors.spin(fwd,flywheelSpeed,volt);
     // } else{
-    //   flywheelMotors.stop(coast); 
+    //   flywheelMotors.stop(coast);
     // }
-    if(enableFlywheel) {
-      flywheelMotors.spin(fwd,flywheelSpeed,volt);
-    } else{
-      flywheelMotors.stop(coast);
-    }
     
     if(!displayImages){
       // Brain.Screen.newLine();
       // Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
       
-      Brain.Screen.setCursor(6,1);
-      Brain.Screen.newLine();
-      Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
+      // Brain.Screen.setCursor(6,1);
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
       // Brain.Screen.newLine();
       // Brain.Screen.print("R: %d",redSwitch.value(rotationUnits::deg));
 
@@ -241,11 +239,11 @@ void usercontrol(void) {
       std::cout << "\n";
     }
     if(Controller1.ButtonR1.pressing()){
-      intakeMotors.spin(forward,100,pct);
-      rollerMotor.spin(reverse);
+      //intakeMotors.spin(forward,100,pct);
+      rollerMotor.spin(reverse, 100,pct);
     }else if(Controller1.ButtonR2.pressing()){
-      intakeMotors.spin(reverse,60,pct);
-      rollerMotor.spin(forward);
+      //intakeMotors.spin(reverse,60,pct);
+      rollerMotor.spin(forward, 100,pct);
     }else{
       intakeMotors.stop(coast);
       if(!Controller1.ButtonX.pressing()){
@@ -253,7 +251,7 @@ void usercontrol(void) {
       }
     }
 
-
+    
     //Actuates the cylinder controlling the endgame release
     if(Controller1.ButtonL2.pressing() && !Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing() && Controller1.ButtonB.pressing()){
       endgame.set(true);
@@ -261,11 +259,11 @@ void usercontrol(void) {
       endgame.set(false);
     }
 
-    if(redSwitch.value(deg)<180){ // Red
-      runDriverRollerSpinning(true);
-    }else{ // Blue
-      runDriverRollerSpinning(false);
-    }
+    // if(redSwitch.value(deg)<180){ // Red  
+    //   runDriverRollerSpinning(true);
+    // }else{ // Blue
+    //   runDriverRollerSpinning(false);
+    // }
     
     // if(endgameTimer.time()>((60+35)*1000)){
     //   Controller1.Screen.setCursor(4,10);
