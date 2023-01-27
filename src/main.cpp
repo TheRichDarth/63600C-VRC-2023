@@ -1,27 +1,11 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
-/*    Author:       VEX                                                       */
+/*    Author:       VEX Team 63600C                                           */
 /*    Created:      Thu Sep 26 2019                                           */
-/*    Description:  Competition Template                                      */ 
+/*    Description:  Competition Code for Team 63600C                          */ 
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
-
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)] 
-// frontLeftMotor       motor         9               
-// backLeftMotor        motor         10              
-// backRightMotor       motor         7               
-// frontRightMotor      motor         8               
-// Controller1          controller                    
-// flywheelMotors       motor_group   1, 2            
-// indexPneumatic       digital_out   H               
-// bottomOptical        optical       20              
-// topOptical           optical       19              
-// rollerMotor          motor         16              
-// intakeMotors         motor_group   4, 5            
-// ---- END VEXCODE CONFIGURED DEVICES ----
 
 // "vex.h" library is necessary for all VEXcode programs
 #include "vex.h"
@@ -29,7 +13,7 @@
 #include "sylib/sylib.hpp"
 // "iostream" allows us to print to the terminal and use std::strings.
 #include "iostream"
-// "confic.cpp" has almost all configuration variables that we may want to adjust
+// "config.cpp" has almost all configuration variables that we may want to adjust
 #include "config.cpp"
 
 // "autonRoutines.cpp" contains all the autonomous routines
@@ -44,91 +28,68 @@ using namespace vex;
 competition Competition;
 
 
-/**
- * * 63600C 2023
- *
- * TODO: Create better X drive autonomous methods (maybe a class??)
- * TODO: Add air-saving code to limit index pneumatic actuation to allow enough air for the endgame.
- * TODO: Possibly change indexTime throughout the match to account for having less air pressure at the end of the match. 
- * 
- * !test
- * ?test
- * 
- * Example changes to a comment
- */
 
-/* Pre auton runs when the code is paused by the field controller. xyz xyz
+/* Pre auton runs when the code is paused by the field controller.
  * This is where we run the brain screen auton selection.
- * The brain screen auton selector sets the variable 'autonSelect', declared and defined to a default value in "config.cpp" 
+ * The brain screen auton selector sets the variable 'autonSelect'. Without the selector, this is declared and defined to a default value in "config.cpp" 
  */
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  //Initializes the Sylib library. This controls the LEDs
   sylib::initialize();
+  //Makes sure the end
   endgame.set(false);
   
-  
+  //Runs the brain screen auton selector
   brainAutonSelect();
-  //rollerSpin(true);
 
-
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
 }
 
-/* the autonomous function runs at the beginning of our autonomous period. jjjjj
+/* the autonomous function runs at the beginning of our autonomous period.
  * we call our own function here, 'runAuton' which references the variable from the brain screen auton selector to decide which auton routine to run
  *
  */
-void autonomous(void) {
-  topOptical.setLightPower(80);
-  bottomOptical.setLightPower(80);
-  
+void autonomous(void) {  
   runAuton(autonSelect); // References "autonRoutines.cpp"
-  //rollerSpinAuton(true);
-  //Test123456
 }
+
+//Vexcode has a habit of not downloading my code unless I change something in main.cpp. To ensure this doesn't happen, I comment or uncomment one of these functions before downloading.
 // void doNothing(){}
 void alsoNothing(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
- * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interphere with the driver if left running)
+ * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interfere with the driver if left running)
  * We also setup some code for displaying brain images and turn on the lights on the optical sensors.
  */
 void usercontrol(void) {
-  // User control code here, inside the loop
+
   driverStarted = true;
+  //Makes sure the endgame doesn't activate
   endgame.set(false);
-  
+  //Generates a const char * with the image filepath we are using
   const char * img = names[imgPos].c_str();    
   if(displayImages) Brain.Screen.drawImageFromFile(img, 0, 0);
-
-  topOptical.setLightPower(90,pct);
-  bottomOptical.setLightPower(90,pct);
-  
 
   //timer endgameTimer;
   //endgameTimer.clear();
 
-  timer flywheelLogTimer;
-  flywheelLogTimer.clear();
-
-  
-
-  Controller2.Screen.clearScreen();
   Brain.Screen.clearScreen();
+
+  //This is the main drive loop. This loops infinitely every 20 ms to continuously run drive code
   while (1) {
-    driverStarted = true;
+    
     //Controller2.Screen.clearScreen();
+    /* 
+     * When we want something to be activated by pressing a button once we need to make sure the code doesn't activate multiple times on a single button press
+     * Every time we want to look for a press on Controller2 (The partner controller) we need to also check if this boolean is false.
+     * After accepting a press we also need to set it to true.
+     */
     if(!Controller2.ButtonA.pressing() && !Controller2.ButtonB.pressing() && !Controller2.ButtonX.pressing() && !Controller2.ButtonY.pressing() && !Controller2.ButtonUp.pressing() && !Controller2.ButtonDown.pressing() && !Controller2.ButtonLeft.pressing() && !Controller2.ButtonRight.pressing() && !Controller2.ButtonL1.pressing() && !Controller2.ButtonL2.pressing()){
       Controller2PressedLast = false;
     }
     
     if(displayImages){
-      //const char * img = names[imgPos].c_str();;
-      
-      //Brain.Screen.drawImageFromFile(img, 0, 0);
-
       if(Brain.Screen.pressing() && Brain.Screen.xPosition() <=100 && Brain.Screen.yPosition() <=100 && displayImages){
         while(Brain.Screen.pressing()){}
         incrementImg();
@@ -139,146 +100,43 @@ void usercontrol(void) {
     }else{
     //Put Brain screen print code here to monitor values, etc.
     //Brain.Screen.printAt(20,20,"test1");;
-    }
-    //Controller2.Screen.clearScreen();
-
-    //flywheelSpeedControl();  
-    //xDrive();
-    tankDrive();
-    updateCatapult(Controller1.ButtonL1.pressing());
-
-
-    if(!displayImages){
       Brain.Screen.newLine();
       Brain.Screen.print("Ready Press = %d",readyPress);
     }
-    // if((Controller1.ButtonX.pressing() || Controller2.ButtonX.pressing())&& readyPress<=0){
-    //   enableFlywheel = !enableFlywheel;
-    //   readyPress = readyPressDelay;
-    //   Controller2.Screen.setCursor(2,1);
-    //   Controller2.Screen.print("Flywheel: ");
-    //   if(enableFlywheel){
-    //     Controller2.Screen.print("On ");
-    //   }else{
-    //     Controller2.Screen.print("Off");
-    //   }
-    //   Controller2.rumble("-");
-    // }
 
-    // if((Controller1.ButtonL1.pressing() || Controller1.ButtonL2.pressing() || Controller2.ButtonL1.pressing())&& readyPress<=0){
-    //   indexPneumatic.set(true);
-    //   flywheelDelay = indexTime;
-    //   readyPress = readyPressDelay;
-    // }
-    
+    //Runs tank drive based on joystick inputs
+    tankDrive();
+    //Controls the catapult based on the fire button and configuration
+    updateCatapult(Controller1.ButtonL1.pressing());
 
-    // if(flywheelDelay<=0){
-    //    indexPneumatic.set(false);  
-    // }
-
-    //When flywheelDelay>0 cylinder is extended
-    //When flywheelDelay is between 0 and -indexTimeBetweenDiscs the cylinder is retracted
-    //When flywheelDelay is less than -indexTimeBetweenDiscs if the fire button is pressed flywheelDelay is set to index time.
-    //If not pressed, then the cylinder is told to retract again.
-  
-    // if((Controller1.ButtonL1.pressing() || Controller2.ButtonL1.pressing() || Controller1.ButtonL2.pressing()) && (enableFlywheel || Controller2.ButtonLeft.pressing())){
-    //   if(flywheelDelay<=-indexTimeBetweenDiscs) flywheelDelay = indexTime;
-    // }
-    
-    // if(flywheelDelay>0) indexPneumatic.set(true);
-    // else indexPneumatic.set(false);
-    
+    //Delay between screen presses. When this is less than zero new inputs can be accepted
     readyPress--;
-    //flywheelDelay--;
     
-
-
-    // if(enableFlywheel) {
-    //   flywheelMotors.spin(fwd,flywheelSpeed,volt);
-    // } else{
-    //   flywheelMotors.stop(coast);
-    // }
     
-    if(!displayImages){
-      // Brain.Screen.newLine();
-      // Brain.Screen.print("Flywheel Efficiency (pct): %d",flywheelMotors.efficiency(percent));
-      
-      // Brain.Screen.setCursor(6,1);
-      // Brain.Screen.newLine();
-      // Brain.Screen.print("FlywheelDelay = %d",flywheelDelay);
-      // Brain.Screen.newLine();
-      // Brain.Screen.print("R: %d",redSwitch.value(rotationUnits::deg));
-
-      // Controller1.Screen.setCursor(4,1);
-      // Controller1.Screen.clearLine();
-      // Controller1.Screen.print("FlywheelDelay = %d",flywheelDelay);
-      // Brain.Screen.newLine();
-      // Brain.Screen.print("Top:%d",topOptical.hue());
-      // Brain.Screen.newLine();
-      // Brain.Screen.print("Bottom: %d",bottomOptical.hue());
-
-      // std::cout << "flywheelDelay: ";
-      // std::cout << flywheelDelay;
-      // std::cout << "\n t3 ";
-
-      // std::cout << "Flywheel Vel: ";
-      // std::cout << flywheelMotors.velocity(rpm);
-      // std::cout << "\n";
-
-      //timer (ms), flywheel voltage flywheelVel, index state, sylib vel, 
-      std::cout << flywheelLogTimer.time(msec);
-      std::cout << ",";
-      std::cout << flywheelSpeed;
-      std::cout << ",";
-      std::cout << flywheelMotors.velocity(rpm);
-      std::cout << ",";
-      std::cout << indexPneumatic.value();
-      // std::cout << ",";
-      // std::cout << flywheelSyl.get_velocity();
-
-      std::cout << "\n";
-    }
     if(Controller1.ButtonR1.pressing()){
-      //intakeMotors.spin(forward,100,pct);
-      rollerMotor.spin(reverse, 100,pct);
+       rollerMotor.spin(reverse, 100,pct);
     }else if(Controller1.ButtonR2.pressing()){
-      //intakeMotors.spin(reverse,60,pct);
       rollerMotor.spin(forward, 100,pct);
     }else{
       intakeMotors.stop(coast);
-      if(!Controller1.ButtonX.pressing()){
-        rollerMotor.stop(brake);
-      }
     }
 
     
-    //Actuates the cylinder controlling the endgame release
+    // Actuates the cylinder controlling the endgame release
+    // To avoid accidental discharge multiple buttons must be pressed simultaneously to activate the endgame
     if(Controller1.ButtonL2.pressing() && !Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing() && Controller1.ButtonB.pressing()){
+      //Launch Endgame
       endgame.set(true);
     }else{
+      //Do not launch endgame
       endgame.set(false);
     }
 
-    // if(redSwitch.value(deg)<180){ // Red  
-    //   runDriverRollerSpinning(true);
-    // }else{ // Blue
-    //   runDriverRollerSpinning(false);
-    // }
-    
-    // if(endgameTimer.time()>((60+35)*1000)){
-    //   Controller1.Screen.setCursor(4,10);
-    //   Controller1.Screen.print("Endgame");
-    // } 
-    
-
-    wait(20, msec); // Sleep the task for a short amount of time to
-                    // prevent wasted resources.
+    wait(20, msec); // Sleep the task for a short amount of time to prevent wasted resources.
   }
 }
 
-//
-// Main will set up the competition functions and callbacks.
-//
+
 int main() {
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
