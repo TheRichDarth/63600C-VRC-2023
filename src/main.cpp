@@ -100,8 +100,8 @@ void usercontrol(void) {
     }else{
     //Put Brain screen print code here to monitor values, etc.
     //Brain.Screen.printAt(20,20,"test1");;
-      Brain.Screen.newLine();
-      Brain.Screen.print("Ready Press = %d",readyPress);
+      // Brain.Screen.newLine();
+      // Brain.Screen.print("Ready Press = %d",readyPress);
     }
 
     //Runs tank drive based on joystick inputs
@@ -110,7 +110,7 @@ void usercontrol(void) {
     updateCatapult(Controller1.ButtonL1.pressing());
 
     //Delay between screen presses. When this is less than zero new inputs can be accepted
-    readyPress--;
+    // readyPress--;
     
     
     if(Controller1.ButtonR1.pressing()){

@@ -12,7 +12,6 @@
  * drivetrainGearRatio: the gear ratio on each wheel of the drivetrain. For us this is a 5:4 ratio meaning a factor of 5/4 or 1.25
  * 
  * wheelCircumference: circumference of each wheel (inches)
- * wheelDistance: distance from center of the robot to the center of each wheel. Assumes drivetrain is square, not rectangular.
  * 
  * driveFactor: distance traveled for one revolution of the wheel. Used in distance based driving.
  */
@@ -22,100 +21,147 @@ const float defaultAutonTurnSpeed = 15;
 vex::rotationUnits defaultRotationUnits = rotationUnits::rev;
 vex::distanceUnits defaultDistanceUnits = distanceUnits::in;
 
-const float drivetrainRatio = 1.414213;
-const float drivetrainGearRatio =1.25;
+const float drivetrainGearRatio =48/72;
 const float wheelCircumference = 3.25*3.141592;
-const float wheelDistance = 7.5; // Distance between centers of each wheel and the center of the robot on each axis. (See Notebook)
 
 //Drive factor is the total distance traveled for one revolution of the motor. This is used to calculate distances for distance-based auton driving
-const float driveFactor = wheelCircumference*drivetrainRatio*drivetrainGearRatio;
-
+const float driveFactor = wheelCircumference*drivetrainGearRatio;
+/**
+ * @brief Drives the robot forward for specified rotations at a specified velocity
+ * 
+ * @param distance The rotations to drive
+ * @param distanceUnits Units for rotations
+ * @param velocity The velocity to drive
+ * @param velocityUnits Units for velocity
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   leftDrivetrain.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,false);
   rightDrivetrain.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
+/**
+ * @brief Drives the robot forward for specified rotations at a default velocity
+ * 
+ * @param distance The rotations to drive
+ * @param distanceUnits Units for rotations
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance,rotationUnits distanceUnits){
   driveFwd(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
 }
+/**
+ * @brief Drives the robot forward for a specified distance in wheel revolutions
+ * @param distance The rotation to drive in revolutions
+
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance){
   driveFwd(distance,defaultRotationUnits);
 }
-
+/**
+ * @brief Drives the robot reverse for specified rotations at a specified velocity
+ * 
+ * @param distance The rotations to drive
+ * @param distanceUnits Units for rotations
+ * @param velocity The velocity to drive
+ * @param velocityUnits Units for velocity
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
   leftDrivetrain.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,false);
   rightDrivetrain.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
 }
+/**
+ * @brief Drives the robot reverse for specified rotations at a default velocity
+ * 
+ * @param distance The rotations to drive
+ * @param distanceUnits Units for rotations
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance,rotationUnits distanceUnits){
   driveRev(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
 }
+/**
+ * @brief Drives the robot forward for a specified distance in wheel revolutions
+ * @param distance The rotation to drive in revolutions
+
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance){
   driveRev(distance,defaultRotationUnits);
 }
-void driveLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
-}
-void driveLeft(float distance,rotationUnits distanceUnits){
-  driveLeft(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
-}
-void driveLeft(float distance){
-  driveLeft(distance,defaultRotationUnits);
-}
-void driveRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
-}
-void driveRight(float distance,rotationUnits distanceUnits){
-  driveRight(distance,distanceUnits,defaultAutonDriveSpeed,velocityUnits::pct);
-}
-void driveRight(float distance){
-  driveRight(distance,defaultRotationUnits);
-}
+
+/**
+ * @brief Turns the robot right in place for a specified wheel rotation at a specified velocity
+ * 
+ * @param distance The rotations for each wheel to move
+ * @param distanceUnits Rotation units
+ * @param velocity Wheel velocity
+ * @param velocityUnits Velocity units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void turnRight(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits,waitForCompletion);
+  leftDrivetrain.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
+  rightDrivetrain.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
 }
+/**
+ * @brief Turns the robot right in place for a specified wheel rotation at a specified velocity
+ * 
+ * @param distance The rotations for each wheel to move
+ * @param distanceUnits Rotation units
+ */
 void turnRight(float distance,rotationUnits distanceUnits){
   turnRight(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
 }
-// void turnRight(float distance){
-//   turnRight(distance,defaultRotationUnits);
-// }
+/**
+ * @brief Turns the robot left in place for a specified wheel rotation at a specified velocity
+ * 
+ * @param distance The rotations for each wheel to move
+ * @param distanceUnits Rotation units
+ * @param velocity Wheel velocity
+ * @param velocityUnits Velocity units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void turnLeft(float distance, rotationUnits distanceUnits, float velocity, velocityUnits velocityUnits, bool waitForCompletion = true){
-  frontLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  frontRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
-  backLeftMotor.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, false);
-  backRightMotor.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
+  leftDrivetrain.spinFor(reverse,distance,distanceUnits,velocity,velocityUnits, false);
+  rightDrivetrain.spinFor(forward,distance,distanceUnits,velocity,velocityUnits, waitForCompletion);
 }
+/**
+ * @brief Turns the robot right in place for a specified wheel rotation at a specified velocity
+ * 
+ * @param distance The rotations for each wheel to move
+ * @param distanceUnits Rotation units
+ */
 void turnLeft(float distance,rotationUnits distanceUnits){
   turnLeft(distance,distanceUnits,defaultAutonTurnSpeed,velocityUnits::pct);
 }
-// void turnLeft(float distance){
-//   turnLeft(distance,defaultRotationUnits);
-// }
+
+/**
+ * @brief Sets the timeout value for all drive motors
+ * 
+ * @param time Time for the motor timeout
+ * @param units Time units
+ */
 void driveTimeout(int time, timeUnits units){
-  frontLeftMotor.setTimeout(time,units);
-  frontRightMotor.setTimeout(time,units);
-  backLeftMotor.setTimeout(time,units);
-  backRightMotor.setTimeout(time,units);
+  leftDrivetrain.setTimeout(time,units);
+  rightDrivetrain.setTimeout(time,units);
 }
+/**
+ * @brief Sets the timeout value for all drive motors in seconds
+ * 
+ * @param time Time for the motor timeout
+ */
 void driveTimeout(int time){
   driveTimeout(time,seconds);
 }
 
-
-
-//Distance-based auton functions:
-//Distance driven = revolutions*circumference*sqrt(2)*gearRatio
-//revolutions = distance/(circumference*sqrt(2)*gearRatio)
-
-
+/**
+ * @brief Converts a distance with specified units into a float quantity of inches
+ * 
+ * @param input Distance
+ * @param distUnits Distance Units
+ * @return Distance converted into inches
+ */
 float convertToInch(float input, distanceUnits distUnits){
   // if(distUnits == inches || distUnits == distanceUnits::in){
   //   return input;
@@ -125,19 +171,52 @@ float convertToInch(float input, distanceUnits distUnits){
   return input;
   
 }
-
+/**
+ * @brief Drives the robot forward for specified distance at a specified velocity based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param velocity Velocity to drive
+ * @param velUnits Velocity Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
   driveFwd(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
 }
+/**
+ * @brief Drives the robot forward for specified distance at a specified velocity in percent based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param velocity Velocity to drive
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
   driveFwd(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
 }
+/**
+ * @brief Drives the robot forward for specified distance at a default velocity based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, distanceUnits distUnits, bool waitForCompletion = true){
   driveFwd(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
 }
+/**
+ * @brief Drives the robot forward for specified distance with default units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param velocity Velocity to drive
+ * @param velUnits Velocity Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, bool waitForCompletion = true){
   driveFwd(distance, defaultDistanceUnits, waitForCompletion);
 }
+
 void driveFwd(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
   driveFwd(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
 }
@@ -164,66 +243,8 @@ void driveRev(float distance, float velocity, bool waitForCompletion = true){
   driveRev(distance, velocity, velocityUnits::pct, waitForCompletion);
 }
 
-void driveLeft(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveLeft(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
-}
-void driveLeft(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
-  driveLeft(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
-}
-void driveLeft(float distance, distanceUnits distUnits, bool waitForCompletion = true){
-  driveLeft(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
-}
-void driveLeft(float distance, bool waitForCompletion = true){
-  driveLeft(distance, defaultDistanceUnits, waitForCompletion);
-}
-void driveLeft(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveLeft(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
-}
-void driveLeft(float distance, float velocity, bool waitForCompletion = true){
-  driveLeft(distance, velocity, velocityUnits::pct, waitForCompletion);
-}
 
-void driveRight(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveRight(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
-}
-void driveRight(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
-  driveRight(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
-}
-void driveRight(float distance, distanceUnits distUnits, bool waitForCompletion = true){
-  driveRight(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
-}
-void driveRight(float distance, bool waitForCompletion = true){
-  driveRight(distance, defaultDistanceUnits, waitForCompletion);
-}
-void driveRight(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveRight(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
-}
-void driveRight(float distance, float velocity, bool waitForCompletion = true){
-  driveRight(distance, velocity, velocityUnits::pct, waitForCompletion);
-}
-//Takes Degrees
-void turnLeft(float angle,float velocity, velocityUnits velUnits){
-  float distance = angle/(6.28318530717958*wheelDistance*1.414213*wheelCircumference*drivetrainRatio*drivetrainGearRatio);
-  turnLeft(distance, rotationUnits::rev, velocity, velUnits);
-}
-void turnLeft(float angle, float velocity){
-  turnLeft(angle, velocity, vex::velocityUnits::pct);
-}
-void turnLeft(float angle){
-  turnLeft(angle,defaultAutonTurnSpeed);
-}
-void turnRight(float angle,float velocity, velocityUnits velUnits){
-  float distance = angle/(6.28318530717958*wheelDistance*1.414213*wheelCircumference*drivetrainRatio*drivetrainGearRatio);
-  turnRight(distance, rotationUnits::rev, velocity, velUnits);
-}
-void turnRight(float angle, float velocity){
-  turnRight(angle, velocity, vex::velocityUnits::pct);
-}
-void turnRight(float angle){
-  turnRight(angle,defaultAutonTurnSpeed);
-}
-
-
+//Deprecated
 bool topRollerRed(){
   return topOptical.hue()<=40 || topOptical.hue()>340;
 }
