@@ -10,88 +10,6 @@ void incrementImg(){
   Brain.Screen.clearScreen(color::black);
 }
 
-// // * X drive Variables and Functions:
-// int power, strafe, turn;
-// int lfPower, lbPower, rfPower, rbPower;
-// float scaler = 1;
-
-// int s = 10; // slow drive speed (percent)
-
-// int deadZone(int min, int value){
-//     if(abs(value) > min){
-//       return value;
-//     }else return 0;
-// }
-
-/* xDrive
- * runs x drive based on slow drive buttons and analog sticks
- * Function should be called in the drive while loop
- * Note the configuration variables in config.cpp:
- *
- * bool enableSlowDrive = true;
- * bool enableFwdRevSlowDrive = false;
- * bool enableLeftRightSlowDrive = true;
- * bool enableTurnSlowDrive = true;
- * bool enableXDriveBrainPrinting = true;
- * 
- * Also note the variables above and the deadZone function
- */
-
-//This function is deprecated. We used it before we rebuilt our robot. 
-// void xDrive(){
-
-//     power = deadZone(0,Controller1.Axis3.value());
-//     turn = -Controller1.Axis1.value()*0.8;
-//     strafe = deadZone(0,Controller1.Axis4.value());
-
-
-//     if(enableSlowDrive){
-//       if(Controller1.ButtonUp.pressing() && enableFwdRevSlowDrive){
-//         power = s;
-//       }else if(Controller1.ButtonDown.pressing() && enableFwdRevSlowDrive){
-//         power = -s;
-//       }
-//       if(Controller1.ButtonLeft.pressing() && enableLeftRightSlowDrive){
-//         strafe = -s;
-//       }else if(Controller1.ButtonRight.pressing() && enableLeftRightSlowDrive){
-//         strafe = s;
-//       }
-//       if(Controller1.ButtonY.pressing() && enableTurnSlowDrive){
-//         turn = s;
-//       }else if(Controller1.ButtonA.pressing() && enableTurnSlowDrive){
-//         turn = -s;
-//       }
-//     }
-//     power = -power;
-//     strafe = -strafe;
-
-//     if(!displayImages && enableXDriveBrainPrinting){
-//       Brain.Screen.clearScreen();
-//       Brain.Screen.setCursor(1, 1);
-//       Brain.Screen.newLine();
-//       Brain.Screen.print("Power: ");
-//       Brain.Screen.print(power);
-//       Brain.Screen.newLine();
-//       Brain.Screen.print("Turn: ");
-//       Brain.Screen.print(turn);
-//       Brain.Screen.print(", ");
-//       Brain.Screen.print(Controller1.Axis4.value());
-//       Brain.Screen.newLine();
-//       Brain.Screen.print("Strafe: ");
-//       Brain.Screen.print(strafe);
-//     }
-//     lfPower = (power + turn + strafe) * (scaler);
-//     lbPower = (power + turn - strafe) * (scaler);
-//     rfPower = (power - turn - strafe) * (scaler);
-//     rbPower = (power - turn + strafe) * (scaler);
-
-//     frontLeftMotor.spin(fwd, lfPower, velocityUnits::pct);
-//     backLeftMotor.spin(fwd, lbPower, velocityUnits::pct);
-//     frontRightMotor.spin(fwd, rfPower, velocityUnits::pct);
-//     backRightMotor.spin(fwd, rbPower, velocityUnits::pct);
-
-// }
-
 /**
  * @brief Updates drive motor tank drive based on controller inputs
  * @return * void 
@@ -110,25 +28,27 @@ void tankDrive(){
  * @param fireButton boolean input for whether the fire button is pressed
  */
 void updateCatapult(bool fireButton){
+  //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
+  // std::cout << "\n"/*updateCatapult run. State: "*/;
+  // std::cout << catapultDriverState;
+  // std::cout << ", Limit value: ";
+  // std::cout << catapultLimitSwitch.pressing();
+  // std::cout << ", Timer: ";
+  // std::cout << catapultTimer.time(msec);
 
-  std::cout << "\n"/*updateCatapult run. State: "*/;
-  std::cout << catapultDriverState;
-  std::cout << ", Limit value: ";
-  //std::cout << catapultLimitSwitch;
-  std::cout << catapultLimitSwitch.pressing();
-  std::cout << ", Timer: ";
-  std::cout << catapultTimer.time(msec);
-
-
+  //Based on what state the catapult is in we tell it to move in certain ways and watch for certain things to happen
   switch (catapultDriverState){
   case 0:
-    catapultMotor.stop(brake);
     //Catapult is raised after firing. Waiting for enough time to pass before automatically lowering if appropriate
+    catapultMotor.stop(brake);
+
+    //If enough time has elapsed after firing for the catapult to bounce and release its energy.
     if(catapultTimer.time(sec)>1){
-      //If enough time has elapsed after firing check if catapult should be lowered.
+      //If either automatic lowering is enabled or the catapult fire button is pressed, lower the catapult
       if(catapultAutoLowering || fireButton){
-        //Lower the catapult
+        //Lower the catapult by incrementing the state
         catapultDriverState = 1;
+        //Clears the timer so we know how long is spent in each state
         catapultTimer.clear();
       }
     }
@@ -136,19 +56,28 @@ void updateCatapult(bool fireButton){
   case 1:
     //Lowering catapult into intake-position. Lowering is stopped when limit switch is pressed
     catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+
     if(catapultLimitSwitch.pressing()){
       //The catapult has reached it's rest position and the motor needs to stop moving.
       catapultMotor.stop(brake);
+      //Increment catapult state
       catapultDriverState = 2;
+      //Clears catapult timer so we know how long is spent in each state
       catapultTimer.clear();
     }else if(catapultTimer.time(msec)>catapultLowerMaxTime){
       //Catapult has been trying to lower for 7 seconds and has not progressed. An error must have occurred
+      //Rumble controller to alert driver
       Controller1.rumble("---...---...");
+      //Write text to controller to alert driver
       Controller1.Screen.setCursor(3,0);
       Controller1.Screen.print("Cata Lower Failed");
-      std::cout << "Cata Main Lower Failed";
+      //Outputs to console for debugging
+      //std::cout << "Cata Main Lower Failed";
+      
+      //Let the motor coast and set it to its upwards state
       catapultMotor.stop(coast);
       catapultDriverState = 0;
+      //Clears catapult timer so we know how long is spent in each state
       catapultTimer.clear();
     }
     break;

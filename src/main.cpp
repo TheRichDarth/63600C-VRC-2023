@@ -9,7 +9,7 @@
 
 // "vex.h" library is necessary for all VEXcode programs
 #include "vex.h"
-//This includes all files from sylib. We haven't used this yet but plan to.
+//This includes all files from sylib. We haven't used this yet but plan to for addressable LED lights
 #include "sylib/sylib.hpp"
 // "iostream" allows us to print to the terminal and use std::strings.
 #include "iostream"
@@ -54,7 +54,7 @@ void autonomous(void) {
   runAuton(autonSelect); // References "autonRoutines.cpp"
 }
 
-//Vexcode has a habit of not downloading my code unless I change something in main.cpp. To ensure this doesn't happen, I comment or uncomment one of these functions before downloading.
+//Vexcode has a habit of not downloading my code unless I change something in main.cpp. To ensure this doesn't happen, I comment or uncomment one of these functions before downloading. As stated in the function name, these do nothing.
 // void doNothing(){}
 void alsoNothing(){}
 
@@ -67,7 +67,7 @@ void usercontrol(void) {
   driverStarted = true;
   //Makes sure the endgame doesn't activate
   endgame.set(false);
-  //Generates a const char * with the image filepath we are using
+  //For displaying images on the brain screen. Generates a const char * with the image filepath we are using
   const char * img = names[imgPos].c_str();    
   if(displayImages) Brain.Screen.drawImageFromFile(img, 0, 0);
 
@@ -118,7 +118,7 @@ void usercontrol(void) {
     }else if(Controller1.ButtonR2.pressing()){
       rollerMotor.spin(forward, 100,pct);
     }else{
-      intakeMotors.stop(coast);
+      rollerMotor.stop(brake);
     }
 
     

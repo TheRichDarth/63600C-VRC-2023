@@ -216,35 +216,94 @@ void driveFwd(float distance, distanceUnits distUnits, bool waitForCompletion = 
 void driveFwd(float distance, bool waitForCompletion = true){
   driveFwd(distance, defaultDistanceUnits, waitForCompletion);
 }
-
+/**
+ * @brief Drives the robot forward for specified distance with default units and a specified velocity wih specified units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param velocity Velocity to drive
+ * @param velUnits Velocity Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
   driveFwd(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
 }
+/**
+ * @brief Drives the robot forward for specified distance ad velocity, each with default units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param velocity Velocity to drive
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveFwd(float distance, float velocity, bool waitForCompletion = true){
   driveFwd(distance, velocity, velocityUnits::pct, waitForCompletion);
 }
 
+/**
+ * @brief Drives the robot reverse for specified distance and velocity each with specified units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param velocity Velocity to drive
+ * @param velUnits Velocity Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
   driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
 }
+/**
+ * @brief Drives the robot reverse for specified distance with default units with specified units and velocity with default units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param velocity Velocity to drive
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */ 
 void driveRev(float distance, distanceUnits distUnits, float velocity, bool waitForCompletion = true){
   driveRev(distance, distUnits,velocity, velocityUnits::pct, waitForCompletion);
 }
+/**
+ * @brief Drives the robot reverse for specified distance with specified units and a default velocity based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param distUnits Distance Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance, distanceUnits distUnits, bool waitForCompletion = true){
   driveRev(distance, distUnits, defaultAutonDriveSpeed, waitForCompletion);
 }
+/**
+ * @brief Drives the robot reverse for specified distance with default units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance, bool waitForCompletion = true){
   driveRev(distance, defaultDistanceUnits, waitForCompletion);
 }
+/**
+ * @brief Drives the robot reverse for specified distance with default units at a velocity with specified units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param velocity Velocity to drive
+ * @param velUnits Velocity Units
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
   driveRev(distance, defaultDistanceUnits, velocity, velUnits, waitForCompletion);
 }
+/**
+ * @brief Drives the robot reverse for specified distance with default units and a specified velocity with default units based on the configuration about the drivetrain
+ * 
+ * @param distance Distance to drive for
+ * @param velocity Velocity to drive
+ * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
+ */
 void driveRev(float distance, float velocity, bool waitForCompletion = true){
   driveRev(distance, velocity, velocityUnits::pct, waitForCompletion);
 }
 
 
-//Deprecated
+//Deprecated methods used to check the optical sensor roller thresholds
 bool topRollerRed(){
   return topOptical.hue()<=40 || topOptical.hue()>340;
 }
@@ -259,7 +318,7 @@ bool bottomRollerBlue(){
 }
 
 
-
+//Deprecated method to spin rollers based on two optical sensors
 void rollerSpin(bool onRedSide, int rollerVelocity){
     
     //Automatic Roller Code: We are RED
@@ -272,8 +331,7 @@ void rollerSpin(bool onRedSide, int rollerVelocity){
     //R/B: Rotate Down (either)
     //B/B: Rotate Up
     //B/R: Correct Position
-
-    //int rollerVelocity = 90;
+    //Complete documentation in Engineering Notebook Volume 1, Page 90-91
     vex::directionType preferredDirection = forward;
     const char * rumblePattern = ".";
     rollerMotor.setStopping(coast);
@@ -357,30 +415,7 @@ void autonRollerSpinning(bool onRedSide, int timeDelay, bool acceptGreenForBlue 
 
 
 
-// float wheelDiameter = 3.25; //Units: inches
-// float gearRatio = 5/4; //Ratio in form of driven/driving
-// float drivetrainRatio = sqrt(2); // X drive makes robot drive sqrt(2) times faster and thus farther
-
-// float convertUnits(float value, distanceUnits inputUnits){ //Converts all units to inches
-//   if(inputUnits==inches || inputUnits==distanceUnits::in){
-//     return value;
-//   }else if(inputUnits==distanceUnits::cm){
-//     return 2.54*value;
-//   }else if(inputUnits==distanceUnits::mm){
-//     return 25.4*value;
-//   }
-//   return 0;
-// }
-
-// void driveFwd(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits){
-//   //distance = wheelRevolutions * pi * diameter * gear ratio * drivetrain Ratio
-//   //wheelRevolutions = distance/(pi*diameter*gear ratio*drivetrain ratio)
-  
-// }
-
-
-
-/*      Brain Auton Select
+/* Brain Screen Auton Select
  *  Called once in preAuton();
  *  Has an infinite loop that will run until either auton starts or the loop is broken by 
  *  a final selection or preAuton ending.
@@ -409,6 +444,7 @@ bool pressedLast = false;
 
 int autonSelect = 5;
 const int numAutonRoutines = 12;
+//The names of each routine
 const std::string autonRoutineNames[numAutonRoutines] = {
     "0.Do Nothing",
     "1.PushPreload",
@@ -425,6 +461,7 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "10.Xyz",
     "11.Xyz"
 };
+//The descriptions of each routine. (Not used at the moment)
 const std::string autonRoutineDescriptions[numAutonRoutines] = {
     "0 points. Does nothing. Still nothing. Doesn't move; doesn't score. Just sits there. You can do better than this. Make a better choice.",
     "2 points. Pushes preloads into the low goal. Drives forward and then backward about 2 feet.",
@@ -441,6 +478,7 @@ const std::string autonRoutineDescriptions[numAutonRoutines] = {
     "n points",
     "n points"
 };
+//The color of each button in the auton selector
 const color routineColors[numAutonRoutines] = {
     color(230),
     color(69,232,80),
@@ -457,7 +495,10 @@ const color routineColors[numAutonRoutines] = {
     color(156,89,209),
     color(44,44,44) 
 };
-
+/**
+ * @brief Displays a menu on the brain screen to select autonomous routines. See Engineering Notebook Volume 1 pages 111-113 and Volume 2 pages 2-3 for complete description
+ * 
+ */
 void brainAutonSelect(){ // Run in pre auton 
     //Brain Screen is 480x272 pixels 
 
