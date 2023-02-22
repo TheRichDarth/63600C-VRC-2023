@@ -29,13 +29,14 @@ void tankDrive(){
  */
 void updateCatapult(bool fireButton){
   //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
-  // std::cout << "\n"/*updateCatapult run. State: "*/;
-  // std::cout << catapultDriverState;
-  // std::cout << ", Limit value: ";
-  // std::cout << catapultLimitSwitch.pressing();
-  // std::cout << ", Timer: ";
-  // std::cout << catapultTimer.time(msec);
-
+  std::cout << "\n"/*updateCatapult run. State: "*/;
+  std::cout << catapultDriverState;
+  std::cout << ", L: ";//Limit
+  std::cout << catapultLimitSwitch.pressing();
+  std::cout << ", T: ";//Timer
+  std::cout << catapultTimer.time(msec);
+  std::cout << ", B: ";//Button
+  std::cout << fireButton;
   //Based on what state the catapult is in we tell it to move in certain ways and watch for certain things to happen
   switch (catapultDriverState){
   case 0:
