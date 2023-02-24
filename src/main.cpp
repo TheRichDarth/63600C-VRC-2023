@@ -39,7 +39,8 @@ void pre_auton(void) {
   //Initializes the Sylib library. This controls the LEDs
   sylib::initialize();
   //Makes sure the end
-  endgame.set(false);
+  endgameL.set(false);
+  endgameR.set(false);
   
   //Runs the brain screen auton selector
   brainAutonSelect();
@@ -66,7 +67,9 @@ void usercontrol(void) {
 
   driverStarted = true;
   //Makes sure the endgame doesn't activate
-  endgame.set(false);
+  endgameL.set(false);
+  endgameR.set(false);
+  
   //For displaying images on the brain screen. Generates a const char * with the image filepath we are using
   const char * img = names[imgPos].c_str();    
   if(displayImages) Brain.Screen.drawImageFromFile(img, 0, 0);
@@ -126,10 +129,12 @@ void usercontrol(void) {
     // To avoid accidental discharge multiple buttons must be pressed simultaneously to activate the endgame
     if(Controller1.ButtonL2.pressing() && !Controller1.ButtonL1.pressing() && Controller1.ButtonR2.pressing() && Controller1.ButtonB.pressing()){
       //Launch Endgame
-      endgame.set(true);
+      endgameR.set(true);
+      endgameL.set(true);
     }else{
       //Do not launch endgame
-      endgame.set(false);
+      endgameR.set(false);
+      endgameL.set(false);
     }
 
     wait(20, msec); // Sleep the task for a short amount of time to prevent wasted resources.

@@ -37,7 +37,8 @@ pot redSwitch = pot(Brain.ThreeWirePort.C);
 distance leftDistance = distance(PORT3);
 
 //digital_out endgameCylinder = digital_out(Brain.ThreeWirePort.B);
-digital_out endgame = digital_out(Brain.ThreeWirePort.B);
+digital_out endgameL = digital_out(Brain.ThreeWirePort.B);
+digital_out endgameR = digital_out(Brain.ThreeWirePort.C);
 
 //Tank Drive motor declarations
 motor leftDrivetrainA = motor(PORT10,ratio6_1,true);
