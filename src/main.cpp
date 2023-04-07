@@ -58,6 +58,7 @@ void autonomous(void) {
 //Vexcode has a habit of not downloading my code unless I change something in main.cpp. To ensure this doesn't happen, I comment or uncomment one of these functions before downloading. As stated in the function name, these do nothing.
 // void doNothing(){}
 void alsoNothing(){}
+// void thisIsNothingToo(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.
  * Before the while loop we initialize some things. We set a variable to false so the brain screen auton selector knows to stop running. (It is also in an infinite loop and will interfere with the driver if left running)
@@ -116,7 +117,7 @@ void usercontrol(void) {
     // readyPress--;
     
     
-    if(Controller1.ButtonR1.pressing()){
+    if(Controller1.ButtonR1.pressing()/* && catapultLimitSwitch.pressing()*/){
        rollerMotor.spin(reverse, 100,pct);
     }else if(Controller1.ButtonR2.pressing()){
       rollerMotor.spin(forward, 100,pct);

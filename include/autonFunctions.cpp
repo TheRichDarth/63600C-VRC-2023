@@ -181,7 +181,7 @@ float convertToInch(float input, distanceUnits distUnits){
  * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
  */
 void driveFwd(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveFwd(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+  driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
 }
 /**
  * @brief Drives the robot forward for specified distance at a specified velocity in percent based on the configuration about the drivetrain
@@ -442,14 +442,14 @@ bool pressedLast = false;
  * 7 Skills Auton extended from game auton right
  */
 
-int autonSelect = 5;
+int autonSelect = 3;
 const int numAutonRoutines = 12;
 //The names of each routine
 const std::string autonRoutineNames[numAutonRoutines] = {
     "0.Do Nothing",
     "1.PushPreload",
-    "2.RED-Spin Roller",
-    "3.BLUE-Spin Roller",
+    "2.Game Roller",
+    "3.CataSkills2",
 
     "4.Skills-2",
     "5.RED-RightGame",
