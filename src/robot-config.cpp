@@ -28,7 +28,7 @@ digital_out indexPneumatic = digital_out(Brain.ThreeWirePort.H);
 //Deprecated optical sensor declarations for automatic roller spinning
 optical bottomOptical = optical(PORT2);
 optical topOptical = optical(PORT1);
-motor rollerMotor = motor(PORT5, ratio18_1, true);
+motor rollerMotor = motor(PORT5, ratio18_1, false);
 motor intakeMotorsMotorA = motor(PORT10, ratio6_1, true);
 motor intakeMotorsMotorB = motor(PORT13, ratio6_1, false);
 motor_group intakeMotors = motor_group(intakeMotorsMotorA, intakeMotorsMotorB);
