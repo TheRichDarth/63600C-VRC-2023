@@ -54,7 +54,7 @@ motor_group rightDrivetrain = motor_group(rightDrivetrainA,rightDrivetrainB,righ
 motor catapultMotor = motor(PORT4,ratio36_1,false);
 triport TWexpander = triport(PORT6);
 limit catapultLimitSwitch = limit(/*TWexpander.G*/Brain.ThreeWirePort.A);
-
+rotation catapultRotationSensor = rotation(PORT7);
 
 
 

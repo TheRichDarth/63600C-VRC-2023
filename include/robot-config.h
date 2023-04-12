@@ -35,6 +35,7 @@ extern motor_group rightDrivetrain;
 extern motor catapultMotor;
 extern triport TWexpander;
 extern limit catapultLimitSwitch;
+extern rotation catapultRotationSensor;
 
 //sylib::Motor flywheelSyl;
 

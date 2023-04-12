@@ -23,20 +23,49 @@ void tankDrive(){
   
 }
 
+
+//Lowest rotation 213
+//Highest point where we can still intake discs 222.2
+//High threshold: 270
+//Highest point total: 275
+//higher numbers are higher
+
 /**
  * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
  * @param fireButton boolean input for whether the fire button is pressed
  */
+
+/**
+ * @brief Used to check whether the catapult is in the upper zone of its travel.
+ * This zone is the highest point and a bit below to account for error.
+ * 
+ * @return true when the catapult is in this zone
+ * @return false else
+ */
+bool cataZone1(){
+  return catapultRotationSensor.angle(deg)>270;
+  }
+/**
+ * @brief Used to check whether the catapult is in the hold zone of its travel
+ * This zone is the point at which the catapult waits for firing.
+ * 
+ * @return true when the catapult is in this zone
+ * @return false else
+ */
+bool cataZone2(){
+  return catapultRotationSensor.angle(deg)<221;
+}
+
 void updateCatapult(bool fireButton){
-  //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
-  std::cout << "\n"/*updateCatapult run. State: "*/;
-  std::cout << catapultDriverState;
-  std::cout << ", L: ";//Limit
-  std::cout << catapultLimitSwitch.pressing();
-  std::cout << ", T: ";//Timer
-  std::cout << catapultTimer.time(msec);
-  std::cout << ", B: ";//Button
-  std::cout << fireButton;
+  // //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
+  // std::cout << "\n"/*updateCatapult run. State: "*/;
+  // std::cout << catapultDriverState;
+  // std::cout << ", L: ";//Limit
+  // std::cout << catapultLimitSwitch.pressing();
+  // std::cout << ", T: ";//Timer
+  // std::cout << catapultTimer.time(msec);
+  // std::cout << ", B: ";//Button
+  // std::cout << fireButton;
   //Based on what state the catapult is in we tell it to move in certain ways and watch for certain things to happen
   switch (catapultDriverState){
   case 0:
@@ -58,7 +87,7 @@ void updateCatapult(bool fireButton){
     //Lowering catapult into intake-position. Lowering is stopped when limit switch is pressed
     catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
 
-    if(catapultLimitSwitch.pressing()){
+    if(cataZone2()){
       //The catapult has reached it's rest position and the motor needs to stop moving.
       catapultMotor.stop(brake);
       //Increment catapult state
@@ -94,7 +123,7 @@ void updateCatapult(bool fireButton){
   case 3:
     //Catapult is in the process of moving downward to fire
     catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
-    if(!catapultLimitSwitch.pressing()){
+    if(cataZone1()){
       //Catapult has fired and the motor should stop.
       catapultMotor.stop(coast);
       catapultDriverState = 0;
