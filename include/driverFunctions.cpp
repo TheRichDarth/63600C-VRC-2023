@@ -18,6 +18,20 @@ void tankDrive(){
   float leftPower = Controller1.Axis3.value();
   float rightPower = Controller1.Axis2.value();
 
+  if(enableJoystickCurve){
+    if(Controller1.Axis3.value()<50){
+      leftPower = (17/50)*Controller1.Axis3.value();
+    }else{
+      leftPower = 100*pow(Controller1.Axis3.value()/90,3);
+    }
+    if(Controller1.Axis2.value()<50){
+      rightPower = (17/50)*Controller1.Axis2.value();
+    }else{
+      rightPower = 100*pow(Controller1.Axis2.value()/90,3);
+    }
+    
+  }
+
   leftDrivetrain.spin(fwd,leftPower,velocityUnits::pct);
   rightDrivetrain.spin(fwd,rightPower,velocityUnits::pct);
   

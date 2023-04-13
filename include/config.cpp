@@ -31,3 +31,14 @@ timer catapultTimer;
 int catapultVelocity = 80; // PCT
 const int catapultLowerMaxTime =7000;
 const int catapultFireMaxTime = 2000;
+
+//Driver Control Options
+/**
+ * @brief Whether or not to curve driver joystick inputs.
+ */
+bool enableJoystickCurve = true;
+/**
+ * @brief Enables or disables limiting intake motion when the catapult isn't down
+ * 
+ */
+bool enableLimitIntake = true;

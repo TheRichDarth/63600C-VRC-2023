@@ -123,7 +123,11 @@ void usercontrol(void) {
     
     
     if(Controller1.ButtonR1.pressing()/* && catapultLimitSwitch.pressing()*/){
-       rollerMotor.spin(reverse, 100,pct);
+      if(enableLimitIntake && !cataZone2()){
+        Controller1.rumble("-.");
+      }else{
+        rollerMotor.spin(reverse, 100,pct);
+      }
     }else if(Controller1.ButtonR2.pressing()){
       rollerMotor.spin(forward, 100,pct);
     }else{
