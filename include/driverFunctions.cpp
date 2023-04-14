@@ -15,21 +15,23 @@ void incrementImg(){
  * @return * void 
  */
 void tankDrive(){
-  float leftPower = Controller1.Axis3.value();
-  float rightPower = Controller1.Axis2.value();
-
+  float LP = Controller1.Axis3.value();
+  float RP = Controller1.Axis2.value();
+  float leftPower = LP;
+  float rightPower = RP;
   if(enableJoystickCurve){
-    if(Controller1.Axis3.value()<50){
-      leftPower = (17/50)*Controller1.Axis3.value();
+    if(LP<50 && LP> -50){
+      leftPower = (17/50)*LP;
     }else{
-      leftPower = 100*pow(Controller1.Axis3.value()/90,3);
+      leftPower = 100*pow(LP/90,3);
     }
-    if(Controller1.Axis2.value()<50){
-      rightPower = (17/50)*Controller1.Axis2.value();
+    if(RP<50 && RP> -50){
+      rightPower = (17/50)*RP;
     }else{
-      rightPower = 100*pow(Controller1.Axis2.value()/90,3);
+      rightPower = 100*pow(RP/90,3);
     }
     
+
   }
 
   leftDrivetrain.spin(fwd,leftPower,velocityUnits::pct);
@@ -43,12 +45,6 @@ void tankDrive(){
 //High threshold: 270
 //Highest point total: 275
 //higher numbers are higher
-
-/**
- * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
- * @param fireButton boolean input for whether the fire button is pressed
- */
-
 /**
  * @brief Used to check whether the catapult is in the upper zone of its travel.
  * This zone is the highest point and a bit below to account for error.
@@ -67,19 +63,28 @@ bool cataZone1(){
  * @return false else
  */
 bool cataZone2(){
-  return catapultRotationSensor.angle(deg)<221;
+  return catapultRotationSensor.angle(deg)<225.5;
 }
+bool cataZone3(){
+  return catapultRotationSensor.angle(deg)<220;
+}
+/**
+ * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
+ * @param fireButton boolean input for whether the fire button is pressed
+ */
+
+
 
 void updateCatapult(bool fireButton){
   // //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
-  // std::cout << "\n"/*updateCatapult run. State: "*/;
-  // std::cout << catapultDriverState;
-  // std::cout << ", L: ";//Limit
-  // std::cout << catapultLimitSwitch.pressing();
-  // std::cout << ", T: ";//Timer
-  // std::cout << catapultTimer.time(msec);
-  // std::cout << ", B: ";//Button
-  // std::cout << fireButton;
+  std::cout << "\n"/*updateCatapult run. State: "*/;
+  std::cout << catapultDriverState;
+  std::cout << ", S: ";//Limit
+  std::cout << catapultRotationSensor.angle(deg);
+  std::cout << ", T: ";//Timer
+  std::cout << catapultTimer.time(msec);
+  std::cout << ", B: ";//Button
+  std::cout << fireButton;
   //Based on what state the catapult is in we tell it to move in certain ways and watch for certain things to happen
   switch (catapultDriverState){
   case 0:
@@ -101,7 +106,7 @@ void updateCatapult(bool fireButton){
     //Lowering catapult into intake-position. Lowering is stopped when limit switch is pressed
     catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
 
-    if(cataZone2()){
+    if(cataZone3()){
       //The catapult has reached it's rest position and the motor needs to stop moving.
       catapultMotor.stop(brake);
       //Increment catapult state
@@ -132,6 +137,8 @@ void updateCatapult(bool fireButton){
       //Fire the catapult
       catapultDriverState = 3;
       catapultTimer.clear();
+    }else if(!cataZone2()){
+      catapultDriverState = 1;
     }
     break;
   case 3:

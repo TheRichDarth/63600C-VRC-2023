@@ -21,31 +21,63 @@ void roller2(bool onRedSide = true){
     //90 degrees times 3.25/
     rollerMotor.spinFor(forward, 2*87.75,rotationUnits::deg,80,velocityUnits::pct);
 }
-
+/**
+ * @brief Used to check whether the catapult is in the upper zone of its travel.
+ * This zone is the highest point and a bit below to account for error.
+ * 
+ * @return true when the catapult is in this zone
+ * @return false else
+ */
+bool acataZone1(){
+  return catapultRotationSensor.angle(deg)>270;
+  }
+/**
+ * @brief Used to check whether the catapult is in the hold zone of its travel
+ * This zone is the point at which the catapult waits for firing.
+ * 
+ * @return true when the catapult is in this zone
+ * @return false else
+ */
+bool acataZone2(){
+  return catapultRotationSensor.angle(deg)<225.5;
+}
+/**
+ * @brief PURPLE skills routine from volume 3 page 44.
+ * 
+ */
 void catapultSkills1(){
     //Step 0: Prepare catapult
     //Lower catapult until limit switch is pressed
-    while(!catapultLimitSwitch.pressing()){
-        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
-    }
-    wait(2,sec);
-    catapultMotor.stop(brake);
+    driveTimeout(500,msec);
+    // while(!acataZone2()){
+    //     catapultMotor.spin(forward,catapultVelocity*3/4,velocityUnits::pct);
+    // }
+    // wait(2,sec);
+    // catapultMotor.stop(brake);
     //Step 1: Spin first roller
     //1.1 Drive into roller
-    driveFwd(1,inches);
+    rightDrivetrain.spinFor(180,deg,20,velocityUnits::pct);
+    wait(200,msec);
     //1.2 Spin Roller
     rollerMotor.spinFor(forward, 4*87.75,rotationUnits::deg,80,velocityUnits::pct);
-
+    wait(600,msec);
     //Step 2: Move to and spin second roller; Pick up disc.
     //2.1 Back up and turn right 90 degrees
     driveRev(12,inches);
-    turnRight(3,rev);
+    turnRight(5,rev);
+    wait(200,msec);
     //2.2 Intake disc
     rollerMotor.spin(reverse,100,pct);
     //2.3 Drive into second roller
-    driveFwd(36,inches);
+    driveFwd(30,inches);
     //2.4 Spin roller
+    wait(2,sec);
+    rollerMotor.stop(coast);
+    wait(200,msec);
+    driveFwd(6,inches);
     rollerMotor.spinFor(forward, 4*87.75,rotationUnits::deg,80,velocityUnits::pct);
+
+    /*
     //Step 3: Move to and fire the catapult
     //3.1 back up and turn right 90 deg
     driveRev(2,inches);
@@ -53,16 +85,46 @@ void catapultSkills1(){
     //3.2 drive towards high goal
     driveFwd(24*2+8,inches);
     //3.3 fire catapult
-    while(catapultLimitSwitch.pressing()){
+    while(!acataZone1()){
         catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
     }
-    wait(4,sec);
-    //Step 4: Endgame
-    //4.1 Move to position
-    driveRev(3*24,inches);
-    turnLeft(4.5,rev);
+    wait(1,sec);
+    //3.4 Reset catapult
+    while(!acataZone2()){
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+    
+    //Step 4: Pick up two discs and fire into the blue goal
+    //Step 4.1:  Back up and turn 90 degrees right to be able to line up
+    driveRev(6,inches);
+    turnRight(3.1,rev);
 
-    //4.2 fire endgame
+    //Step 4.2 drive forward and turn right 45 degrees
+    driveFwd(24,inches);
+    turnRight(1.6,rev);
+
+    //Step 4.3 Intake while driving forward
+    intakeMotors.spin(fwd,100,pct);
+    driveFwd(55,inches,20,velocityUnits::pct);
+
+    //Step 4.4: Move to fire position:
+    turnRight(1.6,rev);
+    driveFwd(24,inches);
+    turnLeft(3.1,rev);
+    driveFwd(6,inches);
+
+    //Step 4.5 Fire catapult
+    while(!acataZone1()){
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+    wait(1,sec);
+    //4.6 Reset catapult
+    while(!acataZone2()){
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+    //Step 5: move and fire endgame
+
+    */
 }
 const double rollerSpinSkills = 3.85*87.75;
 void catapultSkills2(){
@@ -159,7 +221,7 @@ void catapultSkills2(){
  * 2: Spin Roller to US (Can be used in Skills
  * 
  * Skills Auton Routines:
- * 3: Catapult skills 2: SHoots preloads, 2 rollers and endgame
+ * 3: Catapult skills 1: Purple! (Roller-roller-fire-fire 5)
  */
 void runAuton(int autonSelect){
     switch (autonSelect){
@@ -172,7 +234,7 @@ void runAuton(int autonSelect){
         roller2();
         break;
     case 3:
-        catapultSkills2();
+        catapultSkills1();
         break;
     default:
         break;

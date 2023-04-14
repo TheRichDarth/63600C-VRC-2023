@@ -449,35 +449,35 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "0.Do Nothing",
     "1.PushPreload",
     "2.Game Roller",
-    "3.CataSkills2",
+    "3.CataSkills1",
 
-    "4.Skills-2",
-    "5.RED-RightGame",
-    "6.BLUE-RightGame",
-    "7.Skills-rgEX",
+    "4.Xyz",
+    "5.Xyz",
+    "6.Xyz",
+    "7.Xyz",
 
-    "8.RED-LeftGame",
-    "9.BLU-LeftGame",
+    "8.Xyz",
+    "9.Xyz",
     "10.Xyz",
     "11.Xyz"
 };
 //The descriptions of each routine. (Not used at the moment)
-const std::string autonRoutineDescriptions[numAutonRoutines] = {
-    "0 points. Does nothing. Still nothing. Doesn't move; doesn't score. Just sits there. You can do better than this. Make a better choice.",
-    "2 points. Pushes preloads into the low goal. Drives forward and then backward about 2 feet.",
-    "10 points. Drives forward slightly and automatically spins roller for RED for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
-    "10 points. Drives forward slightly and automatically spins roller for BLUE for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
+// const std::string autonRoutineDescriptions[numAutonRoutines] = {
+//     "0 points. Does nothing. Still nothing. Doesn't move; doesn't score. Just sits there. You can do better than this. Make a better choice.",
+//     "2 points. Pushes preloads into the low goal. Drives forward and then backward about 2 feet.",
+//     "10 points. Drives forward slightly and automatically spins roller for RED for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
+//     "10 points. Drives forward slightly and automatically spins roller for BLUE for the remainder of the auton period. It sometimes needs a second but it gets there in the end. Usually.",
     
-    "?? points. New untested",
-    "20 points",
-    "20 points",
-    "20+endgame points",
+//     "?? points. New untested",
+//     "20 points",
+//     "20 points",
+//     "20+endgame points",
     
-    "n points",
-    "n points",
-    "n points",
-    "n points"
-};
+//     "n points",
+//     "n points",
+//     "n points",
+//     "n points"
+// };
 //The color of each button in the auton selector
 const color routineColors[numAutonRoutines] = {
     color(230),

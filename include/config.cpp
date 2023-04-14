@@ -36,7 +36,7 @@ const int catapultFireMaxTime = 2000;
 /**
  * @brief Whether or not to curve driver joystick inputs.
  */
-bool enableJoystickCurve = true;
+bool enableJoystickCurve = false;
 /**
  * @brief Enables or disables limiting intake motion when the catapult isn't down
  * 
