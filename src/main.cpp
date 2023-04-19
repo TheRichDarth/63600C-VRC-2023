@@ -57,7 +57,7 @@ void autonomous(void) {
 
 //Vexcode has a habit of not downloading my code unless I change something in main.cpp. To ensure this doesn't happen, I comment or uncomment one of these functions before downloading. As stated in the function name, these do nothing.
 void doNothing(){}
-void alsoNothing(){}
+// void alsoNothing(){}
 // void thisIsNothingToo(){}
 
 /* 'usercontrol' is run during driver. Inside is a while loop that will run forever.

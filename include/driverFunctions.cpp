@@ -63,10 +63,10 @@ bool cataZone1(){
  * @return false else
  */
 bool cataZone2(){
-  return catapultRotationSensor.angle(deg)<225.5;
+  return catapultRotationSensor.angle(deg)<220;
 }
 bool cataZone3(){
-  return catapultRotationSensor.angle(deg)<220;
+  return catapultRotationSensor.angle(deg)<218.5;
 }
 /**
  * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
@@ -77,9 +77,9 @@ bool cataZone3(){
 
 void updateCatapult(bool fireButton){
   // //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
-  std::cout << "\n"/*updateCatapult run. State: "*/;
+  std::cout << "\nupdate: ";
   std::cout << catapultDriverState;
-  std::cout << ", S: ";//Limit
+  std::cout << ", S: ";//Sensor
   std::cout << catapultRotationSensor.angle(deg);
   std::cout << ", T: ";//Timer
   std::cout << catapultTimer.time(msec);
