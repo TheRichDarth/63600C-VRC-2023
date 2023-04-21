@@ -181,7 +181,9 @@ float convertToInch(float input, distanceUnits distUnits){
  * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
  */
 void driveFwd(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+  // driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, true);
+  driveFwd(convertToInch(distance,inches)/(3.25*3.141592*48/72),rotationUnits::rev,velocity,velocityUnits::pct, true);
+
 }
 /**
  * @brief Drives the robot forward for specified distance at a specified velocity in percent based on the configuration about the drivetrain
@@ -248,7 +250,9 @@ void driveFwd(float distance, float velocity, bool waitForCompletion = true){
  * @param waitForCompletion Whether or not the function should wait for the drive to be completed before advancing
  */
 void driveRev(float distance, distanceUnits distUnits, float velocity, velocityUnits velUnits, bool waitForCompletion = true){
-  driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+  //driveRev(convertToInch(distance,distUnits)/driveFactor,rotationUnits::rev,velocity,velUnits, waitForCompletion);
+  driveRev(convertToInch(distance,inches)/(3.25*3.141592*48/72),rotationUnits::rev,velocity,velocityUnits::pct, true);
+  
 }
 /**
  * @brief Drives the robot reverse for specified distance with default units with specified units and velocity with default units based on the configuration about the drivetrain
@@ -442,7 +446,7 @@ bool pressedLast = false;
  * 7 Skills Auton extended from game auton right
  */
 
-int autonSelect = 3;
+int autonSelect = 4;
 const int numAutonRoutines = 12;
 //The names of each routine
 const std::string autonRoutineNames[numAutonRoutines] = {
@@ -451,7 +455,7 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "2.Game Roller",
     "3.CataSkills1",
 
-    "4.Xyz",
+    "4.Right-HalfWP",
     "5.Xyz",
     "6.Xyz",
     "7.Xyz",

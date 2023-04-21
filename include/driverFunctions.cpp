@@ -68,13 +68,11 @@ bool cataZone2(){
 bool cataZone3(){
   return catapultRotationSensor.angle(deg)<218.5;
 }
+
 /**
  * @brief Updates the catapultState variable and runs the catapult motor when appropriate.
  * @param fireButton boolean input for whether the fire button is pressed
  */
-
-
-
 void updateCatapult(bool fireButton){
   // //When connected to the VS Code console this prints debug information. We keep this code commented to save processor time.
   std::cout << "\nupdate: ";

@@ -7,8 +7,9 @@
  * 100% success rate
  */
 void pushPreloads(){
-    driveFwd(2,rotationUnits::rev,30,velocityUnits::pct);
     driveRev(2,rotationUnits::rev,30,velocityUnits::pct);
+    driveFwd(2,rotationUnits::rev,30,velocityUnits::pct);
+
 }
 /* rollerSpinAuton:
  * Drives forward slightly into the roller on the left side and spins the roller.
@@ -28,6 +29,13 @@ void roller2(bool onRedSide = true){
  * @return true when the catapult is in this zone
  * @return false else
  */
+/**
+ * @brief Used to check whether the catapult is in the upper zone of its travel.
+ * This zone is the highest point and a bit below to account for error.
+ * 
+ * @return true when the catapult is in this zone
+ * @return false else
+ */
 bool acataZone1(){
   return catapultRotationSensor.angle(deg)>270;
   }
@@ -39,7 +47,10 @@ bool acataZone1(){
  * @return false else
  */
 bool acataZone2(){
-  return catapultRotationSensor.angle(deg)<225.5;
+  return catapultRotationSensor.angle(deg)<220;
+}
+bool acataZone3(){
+  return catapultRotationSensor.angle(deg)<218.5;
 }
 /**
  * @brief PURPLE skills routine from volume 3 page 44.
@@ -48,7 +59,7 @@ bool acataZone2(){
 void catapultSkills1(){
     //Step 0: Prepare catapult
     //Lower catapult until limit switch is pressed
-    driveTimeout(500,msec);
+    driveTimeout(1000,msec);
     // while(!acataZone2()){
     //     catapultMotor.spin(forward,catapultVelocity*3/4,velocityUnits::pct);
     // }
@@ -56,25 +67,34 @@ void catapultSkills1(){
     // catapultMotor.stop(brake);
     //Step 1: Spin first roller
     //1.1 Drive into roller
-    rightDrivetrain.spinFor(180,deg,20,velocityUnits::pct);
+    rightDrivetrain.spinFor(230,deg,20,velocityUnits::pct, false);
     wait(200,msec);
     //1.2 Spin Roller
-    rollerMotor.spinFor(forward, 4*87.75,rotationUnits::deg,80,velocityUnits::pct);
+    rollerMotor.spinFor(forward, 4*95,rotationUnits::deg,80,velocityUnits::pct);
     wait(600,msec);
+    rightDrivetrain.stop(brake);
+    driveTimeout(5,sec);
     //Step 2: Move to and spin second roller; Pick up disc.
     //2.1 Back up and turn right 90 degrees
-    driveRev(12,inches);
-    turnRight(5,rev);
+    // driveRev(12,inches, 30, velocityUnits::pct, true);
+    driveRev(6.5,inches);
+    // driveRev(2,rotationUnits::rev);
+    //driveRev(convertToInch(12,inches)/(3.25*3.141592*48/72),rotationUnits::rev,30,velocityUnits::pct, true);
+    turnRight(1.8,rev);
     wait(200,msec);
     //2.2 Intake disc
     rollerMotor.spin(reverse,100,pct);
-    //2.3 Drive into second roller
-    driveFwd(30,inches);
-    //2.4 Spin roller
+    wait(300,msec);
+    // //2.3 Drive into second roller
+    driveRev(-28,inches);
+    // //2.4 Spin roller
+    turnLeft(0.6,rev);
     wait(2,sec);
     rollerMotor.stop(coast);
     wait(200,msec);
     driveFwd(6,inches);
+    wait(50,msec);
+    leftDrivetrain.spinFor(230,deg,20,velocityUnits::pct, false);
     rollerMotor.spinFor(forward, 4*87.75,rotationUnits::deg,80,velocityUnits::pct);
 
     /*
@@ -213,6 +233,67 @@ void catapultSkills2(){
     // //Step 5: Drive to roller 3
     // //Step 6: Drive to roller 4
 }
+/**
+ * @brief Shoots three discs into the high goal from the right side then scores the roller
+ * 
+ */
+void rightGame1(){
+    //Step 1: Lower catapult
+    while(!acataZone2()){
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+    catapultMotor.stop(brake);
+    //Step 2: Drive to auton line
+    driveFwd(28/(3.25*3.141592*48/72), rotationUnits::rev, 35, velocityUnits::pct);
+    wait(100,msec);
+    //Step 3 Shoot Disc 1
+    while(!acataZone1()){
+
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+
+    catapultMotor.stop(coast);
+    //Step 4: Shoot Disc 2
+    //4.1 Lower catapult
+    while(!acataZone2()){
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+    catapultMotor.stop(brake);
+    //4.2 Intake disc into catapult
+    rollerMotor.spinFor(reverse,2,seconds,30,velocityUnits::pct);
+    rollerMotor.stop(coast);
+    //Backs up a bit to prevent jams
+    rollerMotor.spinFor(forward,0.5,seconds,50,velocityUnits::pct);
+    wait(300,msec);
+    //4.3: Fire catapult
+    while(!acataZone1()){
+        catapultMotor.spin(forward,catapultVelocity,velocityUnits::pct);
+    }
+    catapultMotor.stop(brake);
+    wait(100,msec);
+   
+    // // Step 6: Shoot Disc 3
+
+    //Step 5: Get Roller
+    //5.1 Drive back 6 inches
+    driveRev(6,inches);
+    //5.2 turn right 90 degrees
+    turnRight(1.8,rev);
+    //5.3 Drive forward 12 inches
+    driveFwd(19,inches);
+    //5.4 Turn right about 125 degrees
+    turnRight(0.42,rev);
+    //5.5 Drive forward 12 inches
+    driveFwd(7,inches);
+    //5.6 Score roller
+    leftDrivetrain.spin(forward,80,velocityUnits::pct);
+    wait(100,msec);
+    rightDrivetrain.spinFor(230,deg,20,velocityUnits::pct, false);
+    wait(100,msec);
+    rollerMotor.spinFor(forward, 4*84,rotationUnits::deg,80,velocityUnits::pct);
+    
+
+}
 
 
 /* Game Auton Routines
@@ -235,6 +316,9 @@ void runAuton(int autonSelect){
         break;
     case 3:
         catapultSkills1();
+        break;
+    case 4:
+        rightGame1();
         break;
     default:
         break;
