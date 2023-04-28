@@ -456,7 +456,7 @@ const std::string autonRoutineNames[numAutonRoutines] = {
     "3.CataSkills1",
 
     "4.Right-HalfWP",
-    "5.Xyz",
+    "5.StateSkills",
     "6.Xyz",
     "7.Xyz",
 

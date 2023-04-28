@@ -162,7 +162,7 @@ void catapultSkills2(){
     wait(1,sec);
     //Step 2: Move to and score roller 1
     //Step 2.1 Back up 3 tiles 
-    driveRev(7.5,rev);
+    driveRev(8.2,rev);
     //Step 2.2 Turn right 90 degrees
     turnRight(1.19,rev);
     //Step 2.3 drive into roller
@@ -187,9 +187,9 @@ void catapultSkills2(){
     turnRight(1.25,rev);
     //Step 3.3 drive one tile into roller
     driveTimeout(3,sec);
-    driveFwd(4.1,rev);
+    driveFwd(3.2,rev);
     //Step 3.4 spin roller
-    rollerMotor.spinFor(forward, 4*87.75,rotationUnits::deg,80,velocityUnits::pct);
+    rollerMotor.spinFor(forward, 4*96,rotationUnits::deg,80,velocityUnits::pct);
     
     //Step 4: Turn and launch Endgame
     //Step 4.1 back up one tile
@@ -201,6 +201,7 @@ void catapultSkills2(){
     turnLeft(0.7,rev);
     //Step 4.3 back up 0.5 tiles
     driveFwd(3,rev);
+    turnLeft(2.5,rev);
     //Step 4.4 fire endgame
     for(int i = 0; i<4; i++){
         endgameL.set(true);
@@ -300,9 +301,11 @@ void rightGame1(){
  * 0: Do Nothing
  * 1: Push preloads into low goal
  * 2: Spin Roller to US (Can be used in Skills
+ * 4: Right game
  * 
  * Skills Auton Routines:
  * 3: Catapult skills 1: Purple! (Roller-roller-fire-fire 5)
+ * 5: State Skills
  */
 void runAuton(int autonSelect){
     switch (autonSelect){
@@ -319,6 +322,9 @@ void runAuton(int autonSelect){
         break;
     case 4:
         rightGame1();
+        break;
+    case 5:
+        catapultSkills2();
         break;
     default:
         break;
