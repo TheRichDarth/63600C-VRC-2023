@@ -7,8 +7,8 @@
  * 100% success rate
  */
 void pushPreloads(){
-    driveRev(2,rotationUnits::rev,30,velocityUnits::pct);
-    driveFwd(2,rotationUnits::rev,30,velocityUnits::pct);
+    driveRev(4,rotationUnits::rev,30,velocityUnits::pct);
+    driveFwd(4,rotationUnits::rev,30,velocityUnits::pct);
 
 }
 /* rollerSpinAuton:
